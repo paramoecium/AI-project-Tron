@@ -12,9 +12,11 @@ import java.awt.*;
 import java.lang.*;
 import java.applet.*;
 import java.util.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 
-public class Tron extends Frame {
+public class Tron extends JFrame {
     
     /**
 	 * 
@@ -26,9 +28,9 @@ public class Tron extends Frame {
     public static final int WEST  = 3;
     
     public String idParam;
-    public Arena  arena;
-    public Label  statusLabel;
-    public Button startButton;
+    public static Arena  arena;
+    public static Label  statusLabel;
+    public static Button startButton;
     public Button quitButton;
     public Button pickGPButton;
     public Button pickNNButton;
@@ -46,10 +48,9 @@ public class Tron extends Frame {
     public static int player1;
     public static int player2;
 
+	public static KeyDemo myKeyDemo;
     
     public int robotScore, humanScore;
-
-
 
     /**
      * main()
@@ -57,17 +58,17 @@ public class Tron extends Frame {
      */
     public static void main( String args[] ) { 
 	
-	Tron tron = new Tron();
+	final Tron tron = new Tron();
 	tron.setTitle( "Tron" );
 	
-	tron.player1 = NONE;
-	tron.player2 = HUMAN;
+	Tron.player1 = NONE;
+	Tron.player2 = HUMAN;
 
 	tron.robotScore = 0;
 	tron.humanScore = 0;
 	
 	tron.arena = new Arena( tron );
-	tron.arena.resize( 256, 256 );
+	tron.arena.setSize( 256, 256 );
 
 	GridBagLayout layout = new GridBagLayout();
 	GridBagConstraints c = new GridBagConstraints();
@@ -85,31 +86,67 @@ public class Tron extends Frame {
 	c.anchor    = GridBagConstraints.CENTER;
 
 	tron.pickGPButton = new Button( "GP robot" );
+	tron.pickGPButton.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			statusLabel.setText( "robot will be controlled by GP" );
+			player1 = GP;
+			arena.selectPlayer1( player1,gpfile );
+			startButton.setEnabled(true);
+			tron.requestFocusInWindow();
+		}
+	});
 	c.gridx = 0;
 	c.gridy = 1;
 	layout.setConstraints( tron.pickGPButton,c );
 	tron.add( tron.pickGPButton );
 	
 	tron.pickNNButton = new Button( "NN robot" );
+	tron.pickNNButton.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			statusLabel.setText( "robot will be controlled by NN" );
+			player1 = NN;
+			arena.selectPlayer1( player1,nnfile );
+			startButton.setEnabled(true);
+		}
+	});
 	c.gridx = 1;
 	c.gridy = 1;
 	layout.setConstraints( tron.pickNNButton,c );
 	tron.add( tron.pickNNButton );
 	
 	tron.pickMyButton = new Button( "My robot" );
+	tron.pickMyButton.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			statusLabel.setText( "robot will be controlled by NN" );
+			player1 = MY;
+			arena.selectPlayer1( player1,nnfile );
+			startButton.setEnabled(true);
+		}
+	});
 	c.gridx = 2;
 	c.gridy = 1;
 	layout.setConstraints( tron.pickMyButton,c );
 	tron.add( tron.pickMyButton );
 	
 	tron.startButton = new Button( "start" );
+	tron.startButton.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			arena.startAgain = true;
+			tron.requestFocusInWindow();
+		}
+	});
 	c.gridx = 3;
 	c.gridy = 1;
 	layout.setConstraints( tron.startButton,c );
 	tron.add( tron.startButton );
-	tron.startButton.disable();
+	tron.startButton.setEnabled(false);
 	
 	tron.quitButton = new Button( "quit" );
+	tron.quitButton.addActionListener(new ActionListener(){
+		public void actionPerformed(ActionEvent e){
+			System.exit( 1 );
+		}
+	});
 	c.gridx = 4;
 	c.gridy = 1;
 	layout.setConstraints( tron.quitButton,c );
@@ -122,9 +159,19 @@ public class Tron extends Frame {
 	c.gridwidth = 5;
 	layout.setConstraints( tron.statusLabel,c );
 	tron.add( tron.statusLabel );
-	
-	tron.pack();
-	tron.show();
+
+	tron.addWindowListener(new WindowAdapter() {
+		public void windowClosing(WindowEvent windowEvent){
+			System.exit(0);
+		}        
+	});  
+
+	tron.myKeyDemo = new KeyDemo (arena);
+	tron.addKeyListener(tron.myKeyDemo);
+
+    tron.pack();
+	tron.setVisible(true);
+	tron.setFocusable(true);
 	tron.arena.start();
 
     } /* end of main() */
@@ -176,21 +223,21 @@ public class Tron extends Frame {
     /**
      * handleEvent()
      *
-     */
+     *
     public boolean handleEvent( Event evt ) {
 	if ( evt.id == Event.WINDOW_DESTROY ) {
 	    System.exit( 1 );
 	    return true;
 	}
 	return super.handleEvent( evt );
-    } /* end of handleEvent() */
+    } * end of handleEvent() */  
 
     
     
     /**
      * action()
      *
-     */
+     *
     public boolean action( Event evt,Object arg ) {
 	if ( arg.equals( "quit" )) {
 	    System.exit( 1 );
@@ -204,32 +251,32 @@ public class Tron extends Frame {
 	    statusLabel.setText( "robot will be controlled by GP" );
 	    player1 = GP;
 	    arena.selectPlayer1( player1,gpfile );
-	    startButton.enable();
+	    startButton.setEnabled(true);
 	    return true;
 	}
 	else if ( arg.equals( "NN robot" )) {
 	    statusLabel.setText( "robot will be controlled by NN" );
 	    player1 = NN;
 	    arena.selectPlayer1( player1,nnfile );
-	    startButton.enable();
+	    startButton.setEnabled(true);
 	    return true;
 	}
 	else if ( arg.equals( "My robot" )) {
 	    statusLabel.setText( "robot will be controlled by my code" );
 	    player1 = MY;
 	    arena.selectPlayer1( player1,nnfile );
-	    startButton.enable();
+	    startButton.setEnabled(true);
 	    return true;
 	}
 	return false;
-    } /* end of action() */
-    
+    }  end of action() */
+   
 
-    
     /**
      * keyDown()
      *
-     */
+     *
+	 *
     public boolean keyDown( Event e,int key ) {
 	if ( player2 == HUMAN ) {
 	    switch ( key ) {
@@ -263,8 +310,52 @@ public class Tron extends Frame {
 	else {
 	    return false;
 	}
-    } /* end of keyDown() */
+    }   end of keyDown() */
 
     
-    
 } /* end of Tron class */
+
+
+class KeyDemo extends KeyAdapter {
+	Arena arena;
+
+	public KeyDemo (Arena a) {
+		arena = a;
+	}
+
+	public void keyPressed(KeyEvent e){
+		int key = e.getKeyCode();
+		//System.out.println("keyPressed");
+		if(arena.state == arena.RUNNING) {
+			switch ( key ) {
+				case KeyEvent.VK_UP:
+					arena.player2.d = Tron.NORTH;
+					arena.player2.didsomething = true;
+					//System.out.println("North");
+					break;
+				case KeyEvent.VK_DOWN:
+					arena.player2.d = Tron.SOUTH;
+					arena.player2.didsomething = true;
+					//System.out.println("South");
+					break;
+				case KeyEvent.VK_LEFT:
+					arena.player2.d = Tron.WEST;
+					arena.player2.didsomething = true;
+					//System.out.println("West");
+					break;
+				case KeyEvent.VK_RIGHT:
+					arena.player2.d = Tron.EAST;
+					arena.player2.didsomething = true;
+					//System.out.println("East");
+					break;
+			}
+		}
+		//else{
+		//	System.out.println(key);
+		//}
+	}
+	public void keyReleased(KeyEvent e){
+	}
+	public void keyTyped(KeyEvent e){
+	}
+}
