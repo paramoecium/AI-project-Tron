@@ -67,8 +67,8 @@ public class Tron extends JFrame {
 	tron.robotScore = 0;
 	tron.humanScore = 0;
 	
-	tron.arena = new Arena( tron );
-	tron.arena.setSize( 256, 256 );
+	Tron.arena = new Arena( tron );
+	Tron.arena.setSize( 256, 256 );
 
 	GridBagLayout layout = new GridBagLayout();
 	GridBagConstraints c = new GridBagConstraints();
@@ -78,8 +78,8 @@ public class Tron extends JFrame {
 	c.gridx = 0;
 	c.gridy = 0;
 	c.gridwidth = 4;
-	layout.setConstraints( tron.arena,c );
-	tron.add( tron.arena );
+	layout.setConstraints( Tron.arena,c );
+	tron.add( Tron.arena );
 	
 	c.gridwidth = 1;
 	c.weightx   = 1;
@@ -128,8 +128,8 @@ public class Tron extends JFrame {
 	layout.setConstraints( tron.pickMyButton,c );
 	tron.add( tron.pickMyButton );
 	
-	tron.startButton = new Button( "start" );
-	tron.startButton.addActionListener(new ActionListener(){
+	Tron.startButton = new Button( "start" );
+	Tron.startButton.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent e){
 			arena.startAgain = true;
 			tron.requestFocusInWindow();
@@ -137,9 +137,9 @@ public class Tron extends JFrame {
 	});
 	c.gridx = 3;
 	c.gridy = 1;
-	layout.setConstraints( tron.startButton,c );
-	tron.add( tron.startButton );
-	tron.startButton.setEnabled(false);
+	layout.setConstraints( Tron.startButton,c );
+	tron.add( Tron.startButton );
+	Tron.startButton.setEnabled(false);
 	
 	tron.quitButton = new Button( "quit" );
 	tron.quitButton.addActionListener(new ActionListener(){
@@ -152,13 +152,13 @@ public class Tron extends JFrame {
 	layout.setConstraints( tron.quitButton,c );
 	tron.add( tron.quitButton );
 	
-	tron.statusLabel = new 
+	Tron.statusLabel = new 
 	    Label( "select robot opponent, then press 'start'         " );
 	c.gridx = 0;
 	c.gridy = 2;
 	c.gridwidth = 5;
-	layout.setConstraints( tron.statusLabel,c );
-	tron.add( tron.statusLabel );
+	layout.setConstraints( Tron.statusLabel,c );
+	tron.add( Tron.statusLabel );
 
 	tron.addWindowListener(new WindowAdapter() {
 		public void windowClosing(WindowEvent windowEvent){
@@ -166,13 +166,13 @@ public class Tron extends JFrame {
 		}        
 	});  
 
-	tron.myKeyDemo = new KeyDemo (arena);
-	tron.addKeyListener(tron.myKeyDemo);
+	Tron.myKeyDemo = new KeyDemo (arena);
+	tron.addKeyListener(Tron.myKeyDemo);
 
     tron.pack();
 	tron.setVisible(true);
 	tron.setFocusable(true);
-	tron.arena.start();
+	Tron.arena.start();
 
     } /* end of main() */
 
@@ -326,7 +326,7 @@ class KeyDemo extends KeyAdapter {
 	public void keyPressed(KeyEvent e){
 		int key = e.getKeyCode();
 		//System.out.println("keyPressed");
-		if(arena.state == arena.RUNNING) {
+		if(arena.state == Arena.RUNNING) {
 			switch ( key ) {
 				case KeyEvent.VK_UP:
 					arena.player2.d = Tron.NORTH;

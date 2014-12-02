@@ -14,10 +14,15 @@ import java.applet.*;
 import java.util.Vector;
 import java.net.*;
 import java.io.*;
+import java.lang.Thread.State;
 
 
 public class Arena extends Canvas implements Runnable {
-    
+   
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
     Dimension grayDimension;
     Image     grayImage;
     Graphics  grayGraphics;
@@ -41,9 +46,7 @@ public class Arena extends Canvas implements Runnable {
     public int               state;
     
     public int               lastmove;
-    public int               gen_no;
-    
-    
+    public int               gen_no;    
     
     /**
      * Arena constructor
@@ -70,8 +73,8 @@ public class Arena extends Canvas implements Runnable {
      *
      */
     public void start() {
-	xmax = size().width;
-	ymax = size().height;
+	xmax = getSize().width;
+	ymax = getSize().height;
 	if ( board == null ) {
 	    board = new boolean[xmax][ymax];
 	}
@@ -87,7 +90,11 @@ public class Arena extends Canvas implements Runnable {
 	    conductor.start();
 	}
 	else {
-	    conductor.resume();
+	    //conductor.resume();
+		synchronized(this){
+			if(conductor.getState() == Thread.State.WAITING)
+				conductor.notify();
+		}
 	}
     } /* end of start() */
 
@@ -100,7 +107,17 @@ public class Arena extends Canvas implements Runnable {
      *
      */
     public void stop() {
-	conductor.suspend();
+		//conductor.suspend();
+		
+		synchronized(this) {
+			try{
+				conductor.wait();
+			}catch(InterruptedException e){
+				System.err.println("Suspend thread error");
+				e.printStackTrace();
+			}
+		}
+		
     } /* end of stop() */
 
     
@@ -219,7 +236,7 @@ public class Arena extends Canvas implements Runnable {
      */
     public void update( Graphics g ) {
 	if ( clear ) {
-	    g.clearRect( 0,0,size().width,size().height );
+	    g.clearRect( 0,0,getSize().width,getSize().height );
 	    clear = false;
 	}
 	if ( player1 != null ) {
