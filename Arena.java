@@ -45,7 +45,7 @@ public class Arena extends Canvas implements Runnable {
     public int               gen_no;
     
     public int               pixelSize;
-    public boolean			 boarderOn = true;
+    public boolean			 boarderOn = false;
     
     /**
      * Arena constructor

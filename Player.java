@@ -118,6 +118,9 @@ public class Player {
      */
     public void step() {
 	if (( d = whereDoIGo()) != old_d ) { 
+		if ( old_d == (d + 2) % 4 ){
+			d = old_d;
+		}
 	    old_d = d;
 	}
 	crash = markBoard( d );
