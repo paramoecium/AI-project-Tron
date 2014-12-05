@@ -44,7 +44,7 @@ public class Player {
     public int          score;
 
     // for graphic2D
-    int lineWidth = 7;//must equal to pixelSize
+    int lineWidth = 7;//must equal to pizelSize
 
     /**
      * Player constructor
@@ -136,8 +136,8 @@ public class Player {
     int canvasY0 = lineWidth*y0+lineWidth/2;
     int canvasX1 = lineWidth*x1+lineWidth/2;
     int canvasY1 = lineWidth*y1+lineWidth/2;
-    ((Graphics2D)g).setStroke(new BasicStroke(lineWidth));
 	if ( crash ) {
+	    ((Graphics2D)g).setStroke(new BasicStroke(1));
 	    g.setColor( Color.red );
 	    g.drawLine( canvasX1-CRASH_DELTA,canvasY1-CRASH_DELTA,
 			canvasX1+CRASH_DELTA,canvasY1+CRASH_DELTA );
@@ -147,6 +147,7 @@ public class Player {
 	    g.drawLine( canvasX1-CRASH_DELTA,canvasY1,canvasX1+CRASH_DELTA,canvasY1 );
 	}
 	else {
+	    ((Graphics2D)g).setStroke(new BasicStroke(lineWidth));
 	    g.setColor( color );
 	    g.drawLine( canvasX0, canvasY0, canvasX1, canvasY1);
 	}

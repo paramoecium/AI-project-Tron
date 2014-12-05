@@ -70,7 +70,7 @@ public class Tron extends JFrame {
 	int board_X_max = 140;
 	int board_Y_max = 80;
 	int pixelSize = 7;
-	Tron.arena = new Arena( tron, board_X_max, board_Y_max);
+	Tron.arena = new Arena( tron, board_X_max, board_Y_max, pixelSize);
 	Tron.arena.setSize( pixelSize*board_X_max, pixelSize*board_Y_max );
 
 	GridBagLayout layout = new GridBagLayout();

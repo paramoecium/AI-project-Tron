@@ -44,13 +44,14 @@ public class Arena extends Canvas implements Runnable {
     public int               lastmove;
     public int               gen_no;
     
-    
+    public int               pixelSize;
+    public boolean			 boarderOn = true;
     
     /**
      * Arena constructor
      *
      */
-    public Arena( Tron t ,int set_xmax, int set_ymax) {
+    public Arena( Tron t ,int set_xmax, int set_ymax, int setPixelSize) {
 	setBackground( Color.black );
 	player1 = null;
 	player2 = null;
@@ -61,6 +62,7 @@ public class Arena extends Canvas implements Runnable {
 	gen_no = 0;
 	xmax = set_xmax;
 	ymax = set_ymax;
+	pixelSize = setPixelSize;
     } /* end of Arena constructor */
 
 
@@ -240,6 +242,17 @@ public class Arena extends Canvas implements Runnable {
 	    g.clearRect( 0,0,getSize().width,getSize().height );
 	    clear = false;
 	}
+	if ( boarderOn == true ) {
+		g.setColor( Color.red.darker().darker().darker() );
+		for(int i=0;i<xmax;i++) {
+			g.fillRect(pixelSize*i, pixelSize*0, pixelSize, pixelSize);
+			g.fillRect(pixelSize*i, pixelSize*(ymax-1), pixelSize, pixelSize);
+		}
+		for(int i=0;i<ymax;i++) {
+			g.fillRect(pixelSize*0, pixelSize*i, pixelSize, pixelSize);
+			g.fillRect(pixelSize*(xmax-1), pixelSize*i, pixelSize, pixelSize);
+		}
+	}
 	if ( player1 != null ) {
 	    player1.paint( g ); 
 	}
@@ -257,13 +270,23 @@ public class Arena extends Canvas implements Runnable {
      *
      */
     public void clearBoard() {
-	int i, j;
-	for ( i=0; i<xmax; i++ )
-	    for ( j=0; j<ymax; j++ )
+	for (int i=0; i<xmax; i++ )
+	    for (int j=0; j<ymax; j++ )
 		board[i][j] = false;
 	clear = true;
-    } /* end of clearBoard() */
 
+	if ( boarderOn == true ) {
+		for(int i=0;i<xmax;i++) {
+			board[i][0] = true;
+			board[i][ymax-1] = true;
+		}
+		for(int i=0;i<ymax;i++) {
+			board[0][i] = true;
+			board[xmax-1][i] = true;
+		}
+	}
+    } /* end of clearBoard() */
+    
 
 
 } /* end of Arena class */
