@@ -30,7 +30,7 @@ public class Player {
     public static final int SOUTH = 0;
     public static final int WEST  = 3;
 
-    public static final int CRASH_DELTA = 10;
+    public static final int CRASH_DELTA = 20;
 
     // previous position in each dimension
     public int          x0, y0;
@@ -43,7 +43,8 @@ public class Player {
     public boolean      crash;
     public int          score;
 
-
+    // for graphic2D
+    int lineWidth = 7;//must equal to pixelSize
 
     /**
      * Player constructor
@@ -131,18 +132,23 @@ public class Player {
      *
      */
     public void paint( Graphics g ) {
+    int canvasX0 = lineWidth*x0+lineWidth/2;
+    int canvasY0 = lineWidth*y0+lineWidth/2;
+    int canvasX1 = lineWidth*x1+lineWidth/2;
+    int canvasY1 = lineWidth*y1+lineWidth/2;
+    ((Graphics2D)g).setStroke(new BasicStroke(lineWidth));
 	if ( crash ) {
 	    g.setColor( Color.red );
-	    g.drawLine( x1-CRASH_DELTA,y1-CRASH_DELTA,
-			x1+CRASH_DELTA,y1+CRASH_DELTA );
-	    g.drawLine( x1,y1-CRASH_DELTA,x1,y1+CRASH_DELTA );
-	    g.drawLine( x1+CRASH_DELTA,y1-CRASH_DELTA,
-			x1-CRASH_DELTA,y1+CRASH_DELTA );
-	    g.drawLine( x1-CRASH_DELTA,y1,x1+CRASH_DELTA,y1 );
+	    g.drawLine( canvasX1-CRASH_DELTA,canvasY1-CRASH_DELTA,
+			canvasX1+CRASH_DELTA,canvasY1+CRASH_DELTA );
+	    g.drawLine( canvasX1,canvasY1-CRASH_DELTA,canvasX1,canvasY1+CRASH_DELTA );
+	    g.drawLine( canvasX1+CRASH_DELTA,canvasY1-CRASH_DELTA,
+			canvasX1-CRASH_DELTA,canvasY1+CRASH_DELTA );
+	    g.drawLine( canvasX1-CRASH_DELTA,canvasY1,canvasX1+CRASH_DELTA,canvasY1 );
 	}
 	else {
 	    g.setColor( color );
-	    g.drawLine( x0,y0,x1,y1 );
+	    g.drawLine( canvasX0, canvasY0, canvasX1, canvasY1);
 	}
     } /* end of paint() */
 
@@ -174,10 +180,6 @@ public class Player {
 		y1 = 0;
 		y0 = y1;
 	    }
-	    if ( r = arena.board[x1][y1] ) {
-		break;
-	    }
-	    arena.board[x1][y1] = true;
 	    break;
 	case NORTH:
 	    y1--;
@@ -185,10 +187,6 @@ public class Player {
 		y1 = y_max - 1;
 		y0 = y1;
 	    }
-	    if ( r = arena.board[x1][y1] ) {
-		break;
-	    }
-	    arena.board[x1][y1] = true;
 	    break;
 	case EAST:
 	    x1++;
@@ -196,10 +194,6 @@ public class Player {
 		x1 = 0;
 		x0 = x1;
 	    }
-	    if ( r = arena.board[x1][y1] ) {
-		break;
-	    }
-	    arena.board[x1][y1] = true;
 	    break;
 	case WEST:
 	    x1--;
@@ -207,14 +201,14 @@ public class Player {
 		x1 = x_max - 1;
 		x0 = x1;
 	    }
-	    if ( r = arena.board[x1][y1] ) {
-		break;
-	    }
-	    arena.board[x1][y1] = true;
 	    break;
 	default:
 	    System.out.println( "UH-OH!" );
 	    break;
+	}
+	r = arena.board[x1][y1];
+	if(!r) {
+		arena.board[x1][y1] = true;
 	}
 	return( r );
     } /* end of markBoard() */

@@ -67,8 +67,11 @@ public class Tron extends JFrame {
 	tron.robotScore = 0;
 	tron.humanScore = 0;
 	
-	Tron.arena = new Arena( tron );
-	Tron.arena.setSize( 256, 256 );
+	int board_X_max = 140;
+	int board_Y_max = 80;
+	int pixelSize = 7;
+	Tron.arena = new Arena( tron, board_X_max, board_Y_max);
+	Tron.arena.setSize( pixelSize*board_X_max, pixelSize*board_Y_max );
 
 	GridBagLayout layout = new GridBagLayout();
 	GridBagConstraints c = new GridBagConstraints();
@@ -77,7 +80,7 @@ public class Tron extends JFrame {
 	
 	c.gridx = 0;
 	c.gridy = 0;
-	c.gridwidth = 4;
+	c.gridwidth = 5;
 	layout.setConstraints( Tron.arena,c );
 	tron.add( Tron.arena );
 	
