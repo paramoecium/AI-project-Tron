@@ -107,6 +107,7 @@ public class Tron extends JFrame {
 			player1 = NN;
 			arena.selectPlayer1( player1,nnfile );
 			startButton.setEnabled(true);
+			tron.requestFocusInWindow();
 		}
 	});
 	c.gridx = 1;
@@ -121,6 +122,7 @@ public class Tron extends JFrame {
 			player1 = MY;
 			arena.selectPlayer1( player1,nnfile );
 			startButton.setEnabled(true);
+			tron.requestFocusInWindow();
 		}
 	});
 	c.gridx = 2;
