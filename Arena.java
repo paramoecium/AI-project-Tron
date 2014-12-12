@@ -29,7 +29,7 @@ public class Arena extends Canvas implements Runnable {
     public  Player           player2;
     public  GPPlayer         gpplayer;
     public  NNPlayer         nnplayer;
-    public  MyPlayer         myplayer;
+    public  FloodPlayer         myplayer;
     public  GPPlayer         gpplayer2;
     public  boolean          board[][];
     public  boolean          clear;
@@ -80,7 +80,8 @@ public class Arena extends Canvas implements Runnable {
 	}
 	gpplayer = new GPPlayer( "gp",Color.pink,this,xmax,ymax,(byte)1,null );
 	nnplayer = new NNPlayer( "nn",Color.pink,this,xmax,ymax,(byte)1,null );
-	myplayer = new MyPlayer( "my",Color.pink,this,xmax,ymax,(byte)1 );
+	//myplayer = new MyPlayer( "my",Color.pink,this,xmax,ymax,(byte)1 );
+	myplayer = new FloodPlayer( "my",Color.pink,this,xmax,ymax,(byte)1 );
 	//gpplayer2 = new GPPlayer( "GP2",Color.cyan,this,xmax,ymax,(byte)2,null );
 	player2 = new HumanPlayer( "human",Color.cyan,this,xmax,ymax,(byte)2 );
 	if ( grayImage != null ) {

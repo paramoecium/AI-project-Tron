@@ -228,8 +228,8 @@ public class Player {
     } /* end of tallyWin() */
 
 
-	public PlayerState getCurrentState () {
-		PlayerState playerState = new PlayerState (arena, this);
+	public Playerstate getCurrentState () {
+		Playerstate playerState = new Playerstate (arena, this);
 		return playerState;
 	}
 

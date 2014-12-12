@@ -117,7 +117,7 @@ public class Playerstate {
         return (Integer[]) moves.toArray();
     }
 	private boolean[][] copyBoard( boolean [][] oldBoard){
-		boolean [][] newBoard = new boolean [2][];
+		boolean [][] newBoard = new boolean [oldBoard.length][];
 		for (int i = 0; i<oldBoard.length; i++) newBoard[i] =  oldBoard[i].clone();
 		return newBoard;
 	}
