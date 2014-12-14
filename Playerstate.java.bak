@@ -34,6 +34,11 @@ public class Playerstate {
 	public Playerstate( Playerstate oldPlayerstate){
 		player1 = oldPlayerstate.player1;
 		player2 = oldPlayerstate.player2;
+
+		player1_head_X = oldPlayerstate.player1_head_X;
+		player1_head_Y = oldPlayerstate.player1_head_Y;
+		player2_head_X = oldPlayerstate.player2_head_X;
+		player2_head_Y = oldPlayerstate.player2_head_Y;
 		board = copyBoard(oldPlayerstate.board);
 		currentPlayer = oldPlayerstate.currentPlayer;
 	}

@@ -9,28 +9,30 @@ public class Playerstate {
 	public 	int 				player2_head_Y;
     public  boolean          	board[][];
     public  Player				currentPlayer;
-
-    private static final int NORTH = 2;
-    private static final int EAST  = 1;
-    private static final int SOUTH = 0;
-    private static final int WEST  = 3;
-
-    private static int x_max;
-    private static int y_max;
+    /**
+     * test
+     *
+     */
+    public static void main( String args[] ) { 
+    	Arena a = new Arena(new Tron(), 8, 4, 1);
+    	a.start();
+		a.selectPlayer1( 1,"gp.2220000");
+		a.startAgain = true;
+    	Playerstate p = new Playerstate(a, a.player1);
+    	System.out.println("getEnemyHead"+p.getEnemyHead());
+    }
     
 	public Playerstate( Arena arena, Player setCurrentPlayer){
 		player1 = arena.player1;
 		player2 = arena.player2;
-
 		player1_head_X = player1.x1;
 		player1_head_Y = player1.y1;
 		player2_head_X = player2.x1;
 		player2_head_Y = player2.y1;
 		board = copyBoard(arena.board);
 		currentPlayer = setCurrentPlayer;
-		x_max = board.length;
-		y_max = board[0].length;
 	}
+	
 	public Playerstate( Playerstate oldPlayerstate){
 		player1 = oldPlayerstate.player1;
 		player2 = oldPlayerstate.player2;
@@ -42,6 +44,7 @@ public class Playerstate {
 		board = copyBoard(oldPlayerstate.board);
 		currentPlayer = oldPlayerstate.currentPlayer;
 	}
+	
 	public Point getEnemyHead(){
 		if (currentPlayer==player2){
 			return new Point(player1_head_X, player1_head_Y);
@@ -50,6 +53,7 @@ public class Playerstate {
 			return new Point(player2_head_X, player2_head_Y);
 		}
 	}
+	
 	public Playerstate getSuccessor(int direction){
 		int player_head_X, player_head_Y;
 		Player nextPlayer;
@@ -59,26 +63,26 @@ public class Playerstate {
 			nextPlayer = player2;
 		}
 		else{
-			player_head_X = player1_head_X;
-			player_head_Y = player1_head_Y;
+			player_head_X = player2_head_X;
+			player_head_Y = player2_head_Y;
 			nextPlayer = player1;
 		}
 		switch ( direction ) {
-			case SOUTH:
+			case Player.SOUTH:
 			    player_head_Y++;
-			    if ( player_head_Y >= y_max ) player_head_Y = 0;
+			    if ( player_head_Y >= currentPlayer.y_max ) player_head_Y = 0;
 			    break;
-			case NORTH:
+			case Player.NORTH:
 			    player_head_Y--;
-			    if ( player_head_Y < 0 ) player_head_Y = y_max - 1;
+			    if ( player_head_Y < 0 ) player_head_Y = currentPlayer.y_max - 1;
 			    break;
-			case EAST:
+			case Player.EAST:
 			    player_head_X++;
-			    if ( player_head_X >= x_max ) player_head_X = 0;
+			    if ( player_head_X >= currentPlayer.x_max ) player_head_X = 0;
 			    break;
-			case WEST:
+			case Player.WEST:
 			    player_head_X--;
-			    if ( player_head_X < 0 ) player_head_X = x_max - 1;
+			    if ( player_head_X < 0 ) player_head_X = currentPlayer.x_max - 1;
 			    break;
 			default:
 			    System.out.println( "UH-OH!" );
@@ -97,12 +101,21 @@ public class Playerstate {
 		}
 		return newPlayerstate;
 	}
+	
 	public Integer [] getLegalMoves() {
+		int player_head_X, player_head_Y;
+		if (currentPlayer==player1){
+			player_head_X = player1_head_X;
+			player_head_Y = player1_head_Y;
+		}
+		else{
+			player_head_X = player2_head_X;
+			player_head_Y = player2_head_Y;
+		}
 		ArrayList<Integer> moves = new ArrayList<Integer>();
         int dx = 0, dy = 0;
         int nextx, nexty;
         for(int i = 0; i < 4; i++){
-            if ( i == ((currentPlayer.d + 2) % 4) ) continue;
             switch(i){
                 case Player.NORTH:
                     dx = 0; dy = -1;
@@ -117,17 +130,19 @@ public class Playerstate {
                     dx = 1; dy = 0;
                     break;
             }
-            nextx = (currentPlayer.x1+dx+currentPlayer.x_max) % currentPlayer.x_max;
-            nexty = (currentPlayer.y1+dy+currentPlayer.y_max) % currentPlayer.y_max;
+            nextx = (player_head_X+dx) % currentPlayer.x_max;
+            nexty = (player_head_Y+dy) % currentPlayer.y_max;
             if( board[nextx][nexty] == false){
                 moves.add(i);
             }
         }
         return (Integer[]) moves.toArray();
     }
+	
 	public int manhattan(){
 		return Math.abs(player1_head_X-player2_head_X)+Math.abs(player1_head_Y-player2_head_Y);
 	}
+	
 	private boolean[][] copyBoard( boolean [][] oldBoard){
 		boolean [][] newBoard = new boolean [oldBoard.length][];
 		for (int i = 0; i<oldBoard.length; i++) {
@@ -135,6 +150,7 @@ public class Playerstate {
 		}
 		return newBoard;
 	}
+	
 	private void printBoard( boolean [][] board){
 		for (boolean[] u: board) {
 		    for (boolean e: u) {
@@ -142,6 +158,73 @@ public class Playerstate {
 		    }
 	        System.out.println();
 		}
+	}
+	/*
+	 * evaluation and help functions
+	 */
+	public int evaluation(){
+		
+		
+		return 0;
+	}
+	
+	private boolean narrowAlley(int direction){
+		int player_head_X, player_head_Y;
+		if (currentPlayer==player1){
+			player_head_X = player1_head_X;
+			player_head_Y = player1_head_Y;
+		}
+		else{
+			player_head_X = player2_head_X;
+			player_head_Y = player2_head_Y;
+		}
+		int x_max = currentPlayer.x_max;
+		int y_max = currentPlayer.y_max;
+        int nextx, nexty;
+		boolean front,left_front,right_front;
+		switch ( direction ) {
+			case Player.NORTH:
+	            nextx = (player_head_X + 0) % x_max;
+	            nexty = (player_head_Y - 1) % y_max;
+	    		front = board[nextx][nexty];
+	    		left_front  = board[(nextx-1)%x_max][nexty];
+	    		right_front = board[(nextx+1)%x_max][nexty];
+	            break;
+	        case Player.SOUTH:
+	            nextx = (player_head_X + 0) % x_max;
+	            nexty = (player_head_Y + 1) % y_max;
+	    		front = board[nextx][nexty];
+	    		left_front  = board[(nextx+1)%x_max][nexty];
+	    		right_front = board[(nextx-1)%x_max][nexty];
+	            break;
+	        case Player.WEST:
+	            nextx = (player_head_X - 1) % x_max;
+	            nexty = (player_head_Y + 0) % y_max;
+	    		front = board[nextx][nexty];
+	    		left_front  = board[nextx][(nexty+1)%y_max];
+	    		right_front = board[nextx][(nexty-1)%y_max];
+	            break;
+	        case Player.EAST:
+	            nextx = (player_head_X + 1) % x_max;
+	            nexty = (player_head_Y + 0) % y_max;
+	    		front = board[nextx][nexty];
+	    		left_front  = board[nextx][(nexty-1)%y_max];
+	    		right_front = board[nextx][(nexty+1)%y_max];
+	            break;
+			default:
+			    System.out.println( "UH-OH!" );
+	    		front = false;
+	    		left_front  = false;
+	    		right_front = false;
+			    break;
+		}
+		if(front){
+			System.out.println( "UH-OH!" );
+		}
+		else if(left_front && right_front){
+			return true;
+		}
+		return false;
 	}
 	
 }
