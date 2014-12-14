@@ -33,7 +33,7 @@ public class Playerstate {
 		currentPlayer = oldPlayerstate.currentPlayer;
 	}
 	public Point getEnemyHead(){
-		if (currentPlayer==player1){
+		if (currentPlayer==player2){
 			return new Point(player1_head_X, player1_head_Y);
 		}
 		else{
@@ -84,7 +84,6 @@ public class Playerstate {
 		else{
 			newPlayerstate.player2_head_X = player_head_X;
 			newPlayerstate.player2_head_Y = player_head_Y;
-			nextPlayer = player1;
 		}
 		return newPlayerstate;
 	}
@@ -116,6 +115,9 @@ public class Playerstate {
         }
         return (Integer[]) moves.toArray();
     }
+	public int manhattan(){
+		return Math.abs(player1_head_X-player2_head_X)+Math.abs(player1_head_Y-player2_head_Y);
+	}
 	private boolean[][] copyBoard( boolean [][] oldBoard){
 		boolean [][] newBoard = new boolean [oldBoard.length][];
 		for (int i = 0; i<oldBoard.length; i++) {

@@ -118,8 +118,18 @@ public class Playerstate {
     }
 	private boolean[][] copyBoard( boolean [][] oldBoard){
 		boolean [][] newBoard = new boolean [oldBoard.length][];
-		for (int i = 0; i<oldBoard.length; i++) newBoard[i] =  oldBoard[i].clone();
+		for (int i = 0; i<oldBoard.length; i++) {
+			newBoard[i] =  oldBoard[i].clone();
+		}
 		return newBoard;
+	}
+	private void printBoard( boolean [][] board){
+		for (boolean[] u: board) {
+		    for (boolean e: u) {
+		        System.out.print(e+" ");
+		    }
+	        System.out.println();
+		}
 	}
 	
 }
