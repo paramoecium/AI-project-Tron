@@ -72,13 +72,14 @@ public class FloodPlayer extends Player {
 	//return( Math.abs( random.nextInt() % 4 ));
 	// "tit for tat" player (copy human)
 	//return( arena.player2.d );
-	if(step % 4 == 0){
+	//System.out.print(step);
+	//System.out.print(actionStack.size());
+	if(step-- % 4 == 0){
 		flood();
 		step = 3;
 		return (actionStack.pop().intValue());
 	}
 	else{
-		step--;
 		if(actionStack.empty() == false)
 			return (actionStack.pop().intValue());
 		else{
@@ -100,11 +101,10 @@ public class FloodPlayer extends Player {
 	private void flood() {
 		cleanFloodBoard();
 		Playerstate currentState = this.getCurrentState();
-		Node selfNode = new Node(x1, y1, 0);
+		int currentStateX = currentState.currentPlayer.x1;
+		int currentStateY = currentState.currentPlayer.y1;
+		Node selfNode = new Node(currentStateX, currentStateY, 0);
 		Point enemyPoint = currentState.getEnemyHead();
-		
-		System.out.println("x: " + enemyPoint.x + "," + " y: " + enemyPoint.y);
-		System.out.println("x: " + x1 + "," + " y: " + y1);
 		Queue<Node> queue = new LinkedList<Node>();
 		queue.offer(selfNode);
 
@@ -119,8 +119,9 @@ public class FloodPlayer extends Player {
 			if( (arena.board[tempx][tempy] == true && tempd != 0 ) || floodBoard[tempx][tempy] <= tempd)
 				continue;
 			floodBoard[tempx][tempy] = tempd;
-			if(tempx == enemyPoint.x && tempy == enemyPoint.y)
+			if(tempx == enemyPoint.x && tempy == enemyPoint.y){
 				break;
+			}
 			Node up = new Node(tempx, (tempy-1+y_max)%y_max, tempd+1);
 			Node down = new Node(tempx, (tempy+1+y_max)%y_max, tempd+1);
 			Node left = new Node((tempx-1+x_max)%x_max, tempy, tempd+1);
@@ -134,28 +135,38 @@ public class FloodPlayer extends Player {
 		tempx = enemyPoint.x; 
 		tempy = enemyPoint.y;
 		tempd = floodBoard[tempx][tempy];
-		while(tempd > 0){
-			if(floodBoard[tempx-1][tempy] == tempd-1){
+		try{
+		while(tempx != currentStateX || tempy != currentStateY){
+			//System.out.println("x:"+tempx+" y:"+tempy);
+			//System.out.println(tempd);
+			if(floodBoard[(tempx - 1 + x_max) % x_max][tempy] < tempd){
 				actionStack.push(new Integer(Player.EAST));
-				tempx = tempx - 1;
+				tempx = (tempx - 1 + x_max) % x_max;
 			}
-			else if(floodBoard[tempx+1][tempy] == tempd-1){
+			else if(floodBoard[(tempx + 1 + x_max) % x_max][tempy] < tempd){
 				actionStack.push(new Integer(Player.WEST));
-				tempx = tempx + 1;
+				tempx = (tempx + 1 + x_max) % x_max;
 			}
-			else if(floodBoard[tempx][tempy-1] == tempd-1){
+			else if(floodBoard[tempx][(tempy - 1 + y_max) % y_max] < tempd){
 				actionStack.push(new Integer(Player.SOUTH));
-				tempy = tempy - 1;
+				tempy = (tempy - 1 + y_max) % y_max;
 			}
-			else if(floodBoard[tempx][tempy+1] == tempd-1){
+			else if(floodBoard[tempx][(tempy + 1 + y_max) % y_max] < tempd){
 				actionStack.push(new Integer(Player.NORTH));
-				tempy = tempy + 1;
+				tempy = (tempy + 1 + y_max) % y_max;
 			}
 			else{
 				System.err.println("Doesn't find the action list!");
 				System.exit(1);
 			}
-			tempd = tempd - 1;
+			tempd = floodBoard[tempx][tempy];
+		}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace(System.out);
+			printFloodBoard();
+			System.exit(2);
 		}
 		
 
@@ -163,9 +174,9 @@ public class FloodPlayer extends Player {
 
 	void printFloodBoard()
 	{
-		System.out.println("");
+		System.out.println(" ");
 		for(int j = 0; j < y_max; j++){
-			for(int i = 0; i < x_max; i++){
+			for(int i = 1*x_max/5; i < 1*x_max/3; i++){
 				System.out.print(floodBoard[i][j]+",");
 			}
 			System.out.print("\n");
