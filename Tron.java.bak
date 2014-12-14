@@ -173,16 +173,6 @@ public class Tron extends JFrame {
 
 	Tron.myKeyDemo = new KeyDemo (arena);
 	tron.addKeyListener(Tron.myKeyDemo);
-	tron.addKeyListener(new KeyListener() {
-		public void keyPressed(KeyEvent e) {
-			if(e.getKeyCode() == KeyEvent.VK_SPACE){
-				arena.startAgain = true;
-				tron.requestFocusInWindow();
-			}
-		}
-		public void keyReleased(KeyEvent e) {}
-		public void keyTyped(KeyEvent e) {}
-	});
 
     tron.pack();
 	tron.setVisible(true);
