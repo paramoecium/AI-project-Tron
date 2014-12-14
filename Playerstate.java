@@ -21,6 +21,11 @@ public class Playerstate {
 	public Playerstate( Arena arena, Player setCurrentPlayer){
 		player1 = arena.player1;
 		player2 = arena.player2;
+
+		player1_head_X = player1.x1;
+		player1_head_Y = player1.y1;
+		player2_head_X = player2.x1;
+		player2_head_Y = player2.y1;
 		board = copyBoard(arena.board);
 		currentPlayer = setCurrentPlayer;
 		x_max = board.length;
@@ -29,6 +34,11 @@ public class Playerstate {
 	public Playerstate( Playerstate oldPlayerstate){
 		player1 = oldPlayerstate.player1;
 		player2 = oldPlayerstate.player2;
+
+		player1_head_X = oldPlayerstate.player1_head_X;
+		player1_head_Y = oldPlayerstate.player1_head_Y;
+		player2_head_X = oldPlayerstate.player2_head_X;
+		player2_head_Y = oldPlayerstate.player2_head_Y;
 		board = copyBoard(oldPlayerstate.board);
 		currentPlayer = oldPlayerstate.currentPlayer;
 	}
