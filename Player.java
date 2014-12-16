@@ -117,15 +117,17 @@ public class Player {
      *
      */
     public void step() {
-	if (( d = whereDoIGo()) != old_d ) { 
-		if ( old_d == (d + 2) % 4 ){
-			d = old_d;
+		if (( d = whereDoIGo()) != old_d ) { 
+			if ( old_d == (d + 2) % 4 ){
+				d = old_d;
+			}
+			old_d = d;
 		}
-	    old_d = d;
-	}
-	crash = markBoard( d );
-	if ( crash )
-	    arena.state = arena.RESTARTING;
+		crash = markBoard( d );
+		if ( crash ) {
+			printCause();
+			arena.state = arena.RESTARTING;
+		}
     } /* end of step() */
 
 
@@ -233,5 +235,7 @@ public class Player {
 		return playerState;
 	}
 
+	public void printCause() {
+	}
 
 } /* end of Player class */

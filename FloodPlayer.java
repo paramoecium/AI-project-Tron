@@ -22,6 +22,7 @@ public class FloodPlayer extends MyPlayer {
 	int floodBoard[][];
 	Stack<Integer> actionStack;
 	int step;
+	int barrier;
 
 
     /**
@@ -43,6 +44,7 @@ public class FloodPlayer extends MyPlayer {
 		cleanFloodBoard();
 		actionStack = new Stack<Integer> ();
 		step = 3;
+		barrier = 200;
     } /* end of MyPlayer constructor */
 
 
@@ -101,7 +103,7 @@ public class FloodPlayer extends MyPlayer {
 	private void cleanFloodBoard() {
 		for(int i = 0; i < x_max; i++){
 			for(int j = 0; j < y_max; j++){
-				floodBoard[i][j] = 10000;
+				floodBoard[i][j] = barrier;
 			}
 		}
 	}
@@ -144,31 +146,34 @@ public class FloodPlayer extends MyPlayer {
 		tempy = enemyPoint.y;
 		tempd = floodBoard[tempx][tempy];
 		try{
-		while(tempx != currentStateX || tempy != currentStateY){
-			//System.out.println("x:"+tempx+" y:"+tempy);
-			//System.out.println(tempd);
-			if(floodBoard[(tempx - 1 + x_max) % x_max][tempy] < tempd){
-				actionStack.push(new Integer(Player.EAST));
-				tempx = (tempx - 1 + x_max) % x_max;
+			while(tempx != currentStateX || tempy != currentStateY){
+				//System.out.println("x:"+tempx+" y:"+tempy);
+				//System.out.println(tempd);
+				if(floodBoard[(tempx - 1 + x_max) % x_max][tempy] < tempd){
+					actionStack.push(new Integer(Player.EAST));
+					tempx = (tempx - 1 + x_max) % x_max;
+				}
+				else if(floodBoard[(tempx + 1 + x_max) % x_max][tempy] < tempd){
+					actionStack.push(new Integer(Player.WEST));
+					tempx = (tempx + 1 + x_max) % x_max;
+				}
+				else if(floodBoard[tempx][(tempy - 1 + y_max) % y_max] < tempd){
+					actionStack.push(new Integer(Player.SOUTH));
+					tempy = (tempy - 1 + y_max) % y_max;
+				}
+				else if(floodBoard[tempx][(tempy + 1 + y_max) % y_max] < tempd){
+					actionStack.push(new Integer(Player.NORTH));
+					tempy = (tempy + 1 + y_max) % y_max;
+				}
+				else{
+					System.err.println("Doesn't find the action list!");
+					break;
+				}
+				tempd = floodBoard[tempx][tempy];
+				if(actionStack.empty() == false){
+					actionStack.removeElementAt(0);
+				}
 			}
-			else if(floodBoard[(tempx + 1 + x_max) % x_max][tempy] < tempd){
-				actionStack.push(new Integer(Player.WEST));
-				tempx = (tempx + 1 + x_max) % x_max;
-			}
-			else if(floodBoard[tempx][(tempy - 1 + y_max) % y_max] < tempd){
-				actionStack.push(new Integer(Player.SOUTH));
-				tempy = (tempy - 1 + y_max) % y_max;
-			}
-			else if(floodBoard[tempx][(tempy + 1 + y_max) % y_max] < tempd){
-				actionStack.push(new Integer(Player.NORTH));
-				tempy = (tempy + 1 + y_max) % y_max;
-			}
-			else{
-				System.err.println("Doesn't find the action list!");
-				break;
-			}
-			tempd = floodBoard[tempx][tempy];
-		}
 		}
 		catch(Exception e)
 		{
@@ -182,13 +187,25 @@ public class FloodPlayer extends MyPlayer {
 
 	void printFloodBoard()
 	{
+		Playerstate currentState = this.getCurrentState();
+		Point enemyPoint = currentState.getEnemyHead();
 		System.out.println(" ");
 		for(int j = 0; j < y_max; j++){
 			for(int i = 1*x_max/5; i < 1*x_max/3; i++){
-				System.out.print(floodBoard[i][j]+",");
+				if(i == enemyPoint.x && j == enemyPoint.y )
+					System.out.print("{},");
+				else if(floodBoard[i][j] == barrier)
+					System.out.print("++,");
+				else if((floodBoard[i][j]/10) >= 1)
+					System.out.print(" "+floodBoard[i][j]+",");
+				else
+					System.out.print(floodBoard[i][j]+",");
 			}
 			System.out.print("\n");
 		}
+	}
+
+	public void printCause() {
 	}
 
 	class Node{

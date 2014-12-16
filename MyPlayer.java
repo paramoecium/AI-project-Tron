@@ -124,6 +124,8 @@ public class MyPlayer extends Player {
 		}
 	}
 
+	public void printCause() {
+	}
 
 } /* end of MYPlayer class */
 
