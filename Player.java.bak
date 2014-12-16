@@ -176,6 +176,7 @@ public class Player {
      */
     public boolean markBoard( int direction ) {
 	boolean r = false;
+	int i;
 	switch ( direction ) {
 	case SOUTH:
 	    y1++;
