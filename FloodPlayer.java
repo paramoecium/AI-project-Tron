@@ -81,7 +81,7 @@ public class FloodPlayer extends MyPlayer {
 			actionStack.removeAllElements();
 			flood();
 			if(actionStack.empty() == true) {
-				return avoidColliction(x1, y1, d); 
+				return avoidCollision(x1, y1, d); 
 			}
 			step = 2;
 			return (actionStack.pop().intValue());
@@ -92,7 +92,7 @@ public class FloodPlayer extends MyPlayer {
 			else{
 				flood();
 				if(actionStack.empty() == true) {
-					return avoidColliction(x1, y1, d); 
+					return avoidCollision(x1, y1, d); 
 				}
 				return (actionStack.pop().intValue());
 			}	
@@ -170,9 +170,9 @@ public class FloodPlayer extends MyPlayer {
 					break;
 				}
 				tempd = floodBoard[tempx][tempy];
-				if(actionStack.empty() == false){
-					actionStack.removeElementAt(0);
-				}
+			}
+			if(actionStack.empty() == false){
+				actionStack.removeElementAt(0);
 			}
 		}
 		catch(Exception e)
