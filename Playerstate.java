@@ -151,13 +151,17 @@ public class Playerstate {
 		return newBoard;
 	}
 	
-	private void printBoard( boolean [][] board){
+	public void printBoard( boolean [][] board){
 		for (boolean[] u: board) {
 		    for (boolean e: u) {
-		        System.out.print(e+" ");
+		    	if(e) 	System.out.print("T ");
+		    	else 	System.out.print("F ");
 		    }
 	        System.out.println();
 		}
+	}
+	public void printBoard(){
+		printBoard(this.board);
 	}
 	/*
 	 * evaluation and help functions
@@ -168,7 +172,7 @@ public class Playerstate {
 		return 0;
 	}
 	
-	private boolean narrowAlley(int direction){
+	public boolean narrowAlley(int direction){
 		int player_head_X, player_head_Y;
 		if (currentPlayer==player1){
 			player_head_X = player1_head_X;
@@ -180,35 +184,31 @@ public class Playerstate {
 		}
 		int x_max = currentPlayer.x_max;
 		int y_max = currentPlayer.y_max;
-        int nextx, nexty;
+        int nextx = 0, nexty = 0;
 		boolean front,left_front,right_front;
 		switch ( direction ) {
 			case Player.NORTH:
 	            nextx = (player_head_X + 0) % x_max;
-	            nexty = (player_head_Y - 1) % y_max;
-	    		front = board[nextx][nexty];
-	    		left_front  = board[(nextx-1)%x_max][nexty];
+	            nexty = (player_head_Y - 1 + y_max) % y_max;
+	    		left_front  = board[(nextx-1+x_max)%x_max][nexty];
 	    		right_front = board[(nextx+1)%x_max][nexty];
 	            break;
 	        case Player.SOUTH:
 	            nextx = (player_head_X + 0) % x_max;
 	            nexty = (player_head_Y + 1) % y_max;
-	    		front = board[nextx][nexty];
 	    		left_front  = board[(nextx+1)%x_max][nexty];
-	    		right_front = board[(nextx-1)%x_max][nexty];
+	    		right_front = board[(nextx-1+x_max)%x_max][nexty];
 	            break;
 	        case Player.WEST:
-	            nextx = (player_head_X - 1) % x_max;
+	            nextx = (player_head_X - 1 + x_max) % x_max;
 	            nexty = (player_head_Y + 0) % y_max;
-	    		front = board[nextx][nexty];
 	    		left_front  = board[nextx][(nexty+1)%y_max];
-	    		right_front = board[nextx][(nexty-1)%y_max];
+	    		right_front = board[nextx][(nexty-1+y_max)%y_max];
 	            break;
 	        case Player.EAST:
 	            nextx = (player_head_X + 1) % x_max;
 	            nexty = (player_head_Y + 0) % y_max;
-	    		front = board[nextx][nexty];
-	    		left_front  = board[nextx][(nexty-1)%y_max];
+	    		left_front  = board[nextx][(nexty-1+y_max)%y_max];
 	    		right_front = board[nextx][(nexty+1)%y_max];
 	            break;
 			default:
@@ -218,10 +218,8 @@ public class Playerstate {
 	    		right_front = false;
 			    break;
 		}
-		if(front){
-			System.out.println( "UH-OH!" );
-		}
-		else if(left_front && right_front){
+		front = board[nextx][nexty];
+		if(left_front && right_front&&(!front)){
 			return true;
 		}
 		return false;

@@ -117,17 +117,15 @@ public class Player {
      *
      */
     public void step() {
-		if (( d = whereDoIGo()) != old_d ) { 
-			if ( old_d == (d + 2) % 4 ){
-				d = old_d;
-			}
-			old_d = d;
+	if (( d = whereDoIGo()) != old_d ) { 
+		if ( old_d == (d + 2) % 4 ){
+			d = old_d;
 		}
-		crash = markBoard( d );
-		if ( crash ) {
-			printCause();
-			arena.state = arena.RESTARTING;
-		}
+	    old_d = d;
+	}
+	crash = markBoard( d );
+	if ( crash )
+	    arena.state = arena.RESTARTING;
     } /* end of step() */
 
 
@@ -178,6 +176,7 @@ public class Player {
      */
     public boolean markBoard( int direction ) {
 	boolean r = false;
+	int i;
 	switch ( direction ) {
 	case SOUTH:
 	    y1++;
@@ -234,7 +233,5 @@ public class Player {
 		return playerState;
 	}
 
-	public void printCause() {
-	}
 
 } /* end of Player class */

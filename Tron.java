@@ -176,7 +176,7 @@ public class Tron extends JFrame {
 	tron.addKeyListener(new KeyListener() {
 		public void keyPressed(KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_SPACE){
-				arena.startAgain = true;
+				if(startButton.isEnabled()) arena.startAgain = true;
 				tron.requestFocusInWindow();
 			}
 		}

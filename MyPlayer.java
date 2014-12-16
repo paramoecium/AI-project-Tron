@@ -65,11 +65,12 @@ public class MyPlayer extends Player {
 	//return( Math.abs( random.nextInt() % 4 ));
 	// "tit for tat" player (copy human)
 	//return( arena.player2.d );
-		return avoidColliction(x1, y1, d);
+		return avoidCollision(x1, y1, d);
 
     } /* end of whereDoIGo() */
 
-	public int avoidColliction(int currentx, int currenty, int currentDirection) {
+	public int avoidCollision(int currentx, int currenty, int currentDirection) {
+		Playerstate p = this.getCurrentState();
 		int dx = 0;
 		int dy = 0;
 		int cnt = 0;
@@ -94,15 +95,18 @@ public class MyPlayer extends Player {
 			int nextx = (currentx+dx+x_max)%x_max;
 			int nexty = (currenty+dy+y_max)%y_max;
 			if (arena.board[nextx][nexty] == false) {
-				if(currentDirection == d0)
+				boolean narrow = p.narrowAlley(currentDirection);
+				if((currentDirection == d0)&&!narrow)
 					return currentDirection;
 				else if(rightScore[0] == -1){
 					rightScore[0] = currentDirection;
 					rightScore[1] = random.nextInt(100)+1;
+					if(!narrow) rightScore[1] += 10;
 				}
 				else{
 					leftScore[0] = currentDirection;
 					leftScore[1] = random.nextInt(100)+1;
+					if(!narrow) leftScore[1] += 10;
 				}
 			}
 			currentDirection++;
