@@ -15,11 +15,10 @@ import java.util.*;
 
 
 
-public class FloodPlayer extends Player {
+public class FloodPlayer extends MyPlayer {
 
 
     public boolean didsomething = false;
-    public Random random;
 	int floodBoard[][];
 	Stack<Integer> actionStack;
 	int step;
@@ -32,17 +31,18 @@ public class FloodPlayer extends Player {
      *
      */
     public FloodPlayer( String n, Color c, Arena a, int x, int y, byte number ) {
-	name  = n;
-	color = c;
-	arena = a;
-	x_max = x;
-	y_max = y;
-	player_no = number;
-	random = new Random();
-	floodBoard = new int[x_max][y_max];
-	cleanFloodBoard();
-	actionStack = new Stack<Integer> ();
-	step = 4;
+		super(n, c, a, x, y, number); 
+	//name  = n;
+	//color = c;
+	//arena = a;
+	//x_max = x;
+	//y_max = y;
+	//player_no = number;
+		random = new Random();
+		floodBoard = new int[x_max][y_max];
+		cleanFloodBoard();
+		actionStack = new Stack<Integer> ();
+		step = 3;
     } /* end of MyPlayer constructor */
 
 
@@ -74,19 +74,27 @@ public class FloodPlayer extends Player {
 	//return( arena.player2.d );
 	//System.out.print(step);
 	//System.out.print(actionStack.size());
-	if(step-- % 4 == 0){
-		flood();
-		step = 3;
-		return (actionStack.pop().intValue());
-	}
-	else{
-		if(actionStack.empty() == false)
-			return (actionStack.pop().intValue());
-		else{
+		step --;
+		if(step % 2 == 0){
+			actionStack.removeAllElements();
 			flood();
+			if(actionStack.empty() == true) {
+				return avoidColliction(x1, y1, d); 
+			}
+			step = 2;
 			return (actionStack.pop().intValue());
-		}	
-	}
+		}
+		else{
+			if(actionStack.empty() == false)
+				return (actionStack.pop().intValue());
+			else{
+				flood();
+				if(actionStack.empty() == true) {
+					return avoidColliction(x1, y1, d); 
+				}
+				return (actionStack.pop().intValue());
+			}	
+		}
     } /* end of whereDoIGo() */
 
 
@@ -118,10 +126,10 @@ public class FloodPlayer extends Player {
 			//System.out.println(tempd);
 			if( (arena.board[tempx][tempy] == true && tempd != 0 ) || floodBoard[tempx][tempy] <= tempd)
 				continue;
-			floodBoard[tempx][tempy] = tempd;
 			if(tempx == enemyPoint.x && tempy == enemyPoint.y){
 				break;
 			}
+			floodBoard[tempx][tempy] = tempd;
 			Node up = new Node(tempx, (tempy-1+y_max)%y_max, tempd+1);
 			Node down = new Node(tempx, (tempy+1+y_max)%y_max, tempd+1);
 			Node left = new Node((tempx-1+x_max)%x_max, tempy, tempd+1);
@@ -157,7 +165,7 @@ public class FloodPlayer extends Player {
 			}
 			else{
 				System.err.println("Doesn't find the action list!");
-				System.exit(1);
+				break;
 			}
 			tempd = floodBoard[tempx][tempy];
 		}

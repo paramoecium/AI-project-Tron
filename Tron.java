@@ -149,7 +149,7 @@ public class Tron extends JFrame {
 	tron.quitButton = new Button( "quit" );
 	tron.quitButton.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent e){
-			System.exit( 1 );
+			System.exit( 0 );
 		}
 	});
 	c.gridx = 4;

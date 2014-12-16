@@ -65,62 +65,65 @@ public class MyPlayer extends Player {
 	//return( Math.abs( random.nextInt() % 4 ));
 	// "tit for tat" player (copy human)
 	//return( arena.player2.d );
-	int dx = 0;
-	int dy = 0;
-	int currentDirection = d;
-	int currentx = x1;
-	int currenty = y1;
-	int cnt = 0;
-	int [] rightScore = {-1, 0};
-	int [] leftScore = {-1, 0};
-	while(cnt < 4) {
-		switch (currentDirection){
-			case Player.NORTH:
-				dx = 0; dy = -1;
-				break;
-			case Player.SOUTH:
-				dx = 0; dy = 1;
-				break;
-			case Player.WEST:
-				dx = -1; dy = 0;
-				break;
-			case Player.EAST:
-				dx = 1; dy = 0;
-				break;
-		}
-		int nextx = (currentx+dx+x_max)%x_max;
-		int nexty = (currenty+dy+y_max)%y_max;
-		if (arena.board[nextx][nexty] == false) {
-			if(currentDirection == d)
-				return currentDirection;
-			else if(rightScore[0] == -1){
-				rightScore[0] = currentDirection;
-				rightScore[1] = random.nextInt(100)+1;
+		return avoidColliction(x1, y1, d);
+
+    } /* end of whereDoIGo() */
+
+	public int avoidColliction(int currentx, int currenty, int currentDirection) {
+		int dx = 0;
+		int dy = 0;
+		int cnt = 0;
+		int d0 = currentDirection;
+		int [] rightScore = {-1, 0};
+		int [] leftScore = {-1, 0};
+		while(cnt < 4) {
+			switch (currentDirection){
+				case Player.NORTH:
+					dx = 0; dy = -1;
+					break;
+				case Player.SOUTH:
+					dx = 0; dy = 1;
+					break;
+				case Player.WEST:
+					dx = -1; dy = 0;
+					break;
+				case Player.EAST:
+					dx = 1; dy = 0;
+					break;
 			}
-			else{
-				leftScore[0] = currentDirection;
-				leftScore[1] = random.nextInt(100)+1;
+			int nextx = (currentx+dx+x_max)%x_max;
+			int nexty = (currenty+dy+y_max)%y_max;
+			if (arena.board[nextx][nexty] == false) {
+				if(currentDirection == d0)
+					return currentDirection;
+				else if(rightScore[0] == -1){
+					rightScore[0] = currentDirection;
+					rightScore[1] = random.nextInt(100)+1;
+				}
+				else{
+					leftScore[0] = currentDirection;
+					leftScore[1] = random.nextInt(100)+1;
+				}
 			}
+			currentDirection++;
+			currentDirection %= 4;
+			//System.out.println("Turn");
+			cnt++;
 		}
-		currentDirection++;
-		currentDirection %= 4;
-		//System.out.println("Turn");
-		cnt++;
-	}
-	if (rightScore[0] == -1)
-		return d;
-	else if (leftScore[0] == -1){
-		return rightScore[0];
-	}
-	else{
-		//System.out.println(rightScore[1] + " " + leftScore[1]);
-		if(rightScore[1]>leftScore[1]){
+		if (rightScore[0] == -1)
+			return d0;
+		else if (leftScore[0] == -1){
 			return rightScore[0];
 		}
-		else
-			return leftScore[0];
+		else{
+			if(rightScore[1]>leftScore[1]){
+				return rightScore[0];
+			}
+			else
+				return leftScore[0];
+		}
 	}
-    } /* end of whereDoIGo() */
+
 
 } /* end of MYPlayer class */
 
