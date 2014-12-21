@@ -98,12 +98,12 @@ public class Player {
      * go()
      *
      */
-    public void go( int x,int y ) {
+    public void go( int x, int y, int init_d) {
 	x0 = x;
 	y0 = y;
 	x1 = x0;
 	y1 = y0;
-	old_d = d = SOUTH;
+	old_d = d = init_d;
 	crash = false;
 	arena.board[x0][y0] = true;
     } /* end of go() */

@@ -212,8 +212,8 @@ public class Arena extends Canvas implements Runnable {
      */
     public void startPlayers() {
 	clearBoard();
-	player1.go( xmax/4,ymax/2 );
-	player2.go( 3*xmax/4,ymax/2 );
+	player1.go( xmax/4, ymax/2, Player.EAST);
+	player2.go( 3*xmax/4,ymax/2, Player.WEST);
 	player1.score = tron.robotScore;
 	state = RUNNING;
 	lastmove = 0;

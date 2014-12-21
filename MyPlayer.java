@@ -9,8 +9,7 @@
  */
 
 import java.awt.*;
-import java.lang.*;
-import java.applet.*;
+import java.util.Random;
 import java.util.*;
 
 
@@ -65,9 +64,10 @@ public class MyPlayer extends Player {
 	//return( Math.abs( random.nextInt() % 4 ));
 	// "tit for tat" player (copy human)
 	//return( arena.player2.d );
-    	int next_d = -1;
-    	next_d = alongWall(x1, y1, d);
-		if(next_d ==-1) next_d = avoidCollision(x1, y1, d);
+    	int next_d = d;
+    	//next_d = alongWall(x1, y1, d);
+    	int next_d_avoidCollision = avoidCollision(x1, y1, d);
+		if(next_d_avoidCollision != d) next_d = next_d_avoidCollision;
 		return next_d;
 
     } /* end of whereDoIGo() */
@@ -135,10 +135,10 @@ public class MyPlayer extends Player {
 //		if((random.nextInt() % 8)==0){
 //			legalMoves =  p.getShuffledLegalMoves();
 //		}
-		int next_d = -1;
+		int next_d = legalMoves[0];
 		for(int legal_d : legalMoves){
-			next_d = legal_d;
-			if(p.narrowAlley(legal_d) != true) break;
+			if(legal_d == currentDirection) continue;
+			if((p.narrowAlley(legal_d) != true)&&(p.narrowAlley( (legal_d+2)%4 ) == true)) break;
 		}
 		
 
