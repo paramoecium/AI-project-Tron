@@ -71,7 +71,7 @@ public class Tron extends JFrame {
 	int pixelSize = 7;
 	Tron.arena = new Arena( tron, board_X_max, board_Y_max, pixelSize);
 	Tron.arena.setSize( pixelSize*board_X_max, pixelSize*board_Y_max );
-
+	
 	GridBagLayout layout = new GridBagLayout();
 	GridBagConstraints c = new GridBagConstraints();
 	
@@ -89,9 +89,9 @@ public class Tron extends JFrame {
 	
 
     tron.pickP1Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN"});
+	tron.pickP1Box.setSelectedItem("LEVEL1");
 	tron.pickP1Box.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent  e) {
-			startButton.setEnabled(true);
         	if (e.getStateChange() == ItemEvent.SELECTED) {
 		        String playerType = (String)e.getItem();
 		        if (playerType.equals("HUMAN")){
@@ -112,6 +112,9 @@ public class Tron extends JFrame {
 		        statusLabel.setText( "Player 1 is "+ playerType );
         	}
         	arena.selectPlayer1( player1 );
+        	if((Tron.arena.player1 != null)&&(Tron.arena.player2 != null)){
+        		startButton.setEnabled(true);
+        	}
         	tron.requestFocusInWindow();
         }
 	});
@@ -121,6 +124,7 @@ public class Tron extends JFrame {
 	tron.add( tron.pickP1Box );
 	
 	tron.pickP2Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN"});
+	tron.pickP2Box.setSelectedItem("HUMAN");
 	tron.pickP2Box.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent  e) {
         	if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -143,6 +147,9 @@ public class Tron extends JFrame {
 		        statusLabel.setText( "Player 2 is "+ playerType );
         	}
         	arena.selectPlayer2( player2 );
+        	if((Tron.arena.player1 != null)&&(Tron.arena.player2 != null)){
+        		startButton.setEnabled(true);
+        	}
         	tron.requestFocusInWindow();
         }
 	});
