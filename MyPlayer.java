@@ -11,7 +11,7 @@
 import java.awt.*;
 import java.lang.*;
 import java.applet.*;
-import java.util.Random;
+import java.util.*;
 
 
 
@@ -29,13 +29,13 @@ public class MyPlayer extends Player {
      *
      */
     public MyPlayer( String n, Color c, Arena a, int x, int y, byte number ) {
-	name  = n;
-	color = c;
-	arena = a;
-	x_max = x;
-	y_max = y;
-	player_no = number;
-	random = new Random();
+		name  = n;
+		color = c;
+		arena = a;
+		x_max = x;
+		y_max = y;
+		player_no = number;
+		random = new Random();
     } /* end of MyPlayer constructor */
 
 
@@ -111,7 +111,6 @@ public class MyPlayer extends Player {
 			}
 			currentDirection++;
 			currentDirection %= 4;
-			//System.out.println("Turn");
 			cnt++;
 		}
 		if (rightScore[0] == -1)
@@ -131,5 +130,102 @@ public class MyPlayer extends Player {
 	public void printCause() {
 	}
 
-} /* end of MYPlayer class */
 
+	public int regionDeterminedDirection(int limit) {
+		Playerstate currentState = this.getCurrentState();
+		int currentStateX = currentState.currentPlayer.x1;
+		int currentStateY = currentState.currentPlayer.y1;
+		Node selfNode = new Node(currentStateX, currentStateY, 0, -2);
+		Point enemyPoint = currentState.getEnemyHead();
+		Queue<Node> queue = new LinkedList<Node>();
+		queue.offer(selfNode);
+
+		int [][] regionBoard = new int [x_max][y_max];
+		for(int i = 0; i < x_max; i++){
+			for(int j = 0; j < y_max; j++){
+				regionBoard[i][j] = 200;
+			}
+		}
+
+		Node tempNode;
+		int tempx, tempy, tempd, tempsrcd;
+		int [] area = new int [4];
+		for(int i = 0; i < 4; i++){
+			area[i] = 0;
+		}
+		while((tempNode = queue.poll())!=null){
+			tempx = tempNode.point.x;
+			tempy = tempNode.point.y;
+			tempd = tempNode.depth;
+			tempsrcd = tempNode.srcDirection;
+
+			if( (arena.board[tempx][tempy] == true && tempd != 0 ) || regionBoard[tempx][tempy] <= tempd || tempd > limit)
+				continue;
+			//if(tempx == enemyPoint.x && tempy == enemyPoint.y){
+			//	break;
+			//}
+			regionBoard[tempx][tempy] = tempd;
+
+			switch (tempsrcd) {
+				case Player.NORTH:
+					area[0] = area[0]+1;
+					break;
+				case Player.SOUTH:
+					area[1] = area[1]+1;
+					break;
+				case Player.WEST:
+					area[2] = area[2]+1;
+					break;
+				case Player.EAST:
+					area[3] = area[3]+1;
+					break;
+				default:
+			}
+	
+			Node up;
+			Node down;
+			Node left;
+			Node right;
+			if(tempsrcd == -2){
+				up = new Node(tempx, (tempy-1+y_max)%y_max, tempd+1, Player.NORTH);
+				down = new Node(tempx, (tempy+1+y_max)%y_max, tempd+1, Player.SOUTH);
+				left = new Node((tempx-1+x_max)%x_max, tempy, tempd+1, Player.WEST);
+				right = new Node((tempx+1+x_max)%x_max, tempy, tempd+1, Player.EAST);
+			}
+			else{
+				up = new Node(tempx, (tempy-1+y_max)%y_max, tempd+1, tempsrcd);
+				down = new Node(tempx, (tempy+1+y_max)%y_max, tempd+1, tempsrcd);
+				left = new Node((tempx-1+x_max)%x_max, tempy, tempd+1, tempsrcd);
+				right = new Node((tempx+1+x_max)%x_max, tempy, tempd+1, tempsrcd);
+			}	
+			queue.offer(up);
+			queue.offer(down);
+			queue.offer(left);
+			queue.offer(right);
+		}
+	
+		int max = 0;
+		int id = 0;
+		for(int i = 0; i < 4; i++){
+			if(max < area[i]){
+				max = area[i];
+				id = i;
+			}
+		}
+
+		switch (id) {
+			case 0:
+				return Player.NORTH;
+			case 1:
+				return Player.SOUTH;
+			case 2:
+				return Player.WEST;
+			case 3:
+				return Player.EAST;
+			default:
+				return Player.SOUTH;
+		}
+}
+
+
+} /* end of MYPlayer class */

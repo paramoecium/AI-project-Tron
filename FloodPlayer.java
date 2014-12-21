@@ -208,20 +208,5 @@ public class FloodPlayer extends MyPlayer {
 	public void printCause() {
 	}
 
-	class Node{
-		public Point point;
-		public int depth;
-
-		public Node(int x, int y, int d){
-			point = new Point(x, y);
-			depth = d;
-		}
-
-		public Node(Point p, int d){
-			point = p;
-			depth = d;
-		}
-
-	}
 } /* end of MYPlayer class */
 
