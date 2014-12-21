@@ -9,16 +9,15 @@
 
 
 import java.awt.*;
-import java.lang.*;
-import java.applet.*;
-import java.util.Vector;
-import java.net.*;
-import java.io.*;
 
 
 public class Arena extends Canvas implements Runnable {
     
-    Dimension grayDimension;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	Dimension grayDimension;
     Image     grayImage;
     Graphics  grayGraphics;
     
@@ -32,10 +31,11 @@ public class Arena extends Canvas implements Runnable {
     public  MyPlayer         myplayer;
 	public	FloodPlayer		 floodplayer;
 	public  HumanPlayer		 humanplayer;
-	public	GPPlayer		 gpplayer2;
+    public  GPPlayer         gpplayer2;
     public  NNPlayer         nnplayer2;
     public  MyPlayer         myplayer2;
 	public	FloodPlayer		 floodplayer2;
+	public  HumanPlayer		 humanplayer2;
     public  boolean          board[][];
     public  boolean          clear;
     public  boolean          startAgain = false;
@@ -88,12 +88,11 @@ public class Arena extends Canvas implements Runnable {
 	myplayer = new MyPlayer( "my",Color.pink,this,xmax,ymax,(byte)1 );
 	floodplayer = new FloodPlayer( "fl",Color.pink,this,xmax,ymax,(byte)1 );
 	humanplayer = new HumanPlayer( "human",Color.cyan,this,xmax,ymax,(byte)2 );
-	gpplayer2 = new GPPlayer( "gp2",Color.cyan,this,xmax,ymax,(byte)2,null);
-	nnplayer2 = new NNPlayer( "nn2",Color.cyan,this,xmax,ymax,(byte)2,null);
-	myplayer2 = new MyPlayer( "my2",Color.cyan,this,xmax,ymax,(byte)2);
-	floodplayer2 = new FloodPlayer( "fl2",Color.cyan,this,xmax,ymax,(byte)2);
-//	player2 = humanplayer;
-//	player2.crash = false;
+	gpplayer2 = new GPPlayer( "gp2",Color.cyan,this,xmax,ymax,(byte)2,null );
+	nnplayer2 = new NNPlayer( "nn2",Color.cyan,this,xmax,ymax,(byte)2,null );
+	myplayer2 = new MyPlayer( "my2",Color.cyan,this,xmax,ymax,(byte)2 );
+	floodplayer2 = new FloodPlayer( "fl2",Color.cyan,this,xmax,ymax,(byte)2 );
+	humanplayer2 = new HumanPlayer( "human2",Color.cyan,this,xmax,ymax,(byte)2 );
 	if ( grayImage != null ) {
 	    this.getGraphics().drawImage( grayImage,0,0,this ); 
 	}
@@ -151,11 +150,11 @@ public class Arena extends Canvas implements Runnable {
 		}
 		else if ( player == Tron.LEVEL1 ) {
 			player1 = myplayer;
-			player1.name = "MY";
+			player1.name = "LEVEL1";
 		}
 		else if ( player == Tron.LEVEL2 ) {
 			player1 = floodplayer;
-			player1.name = "FLOOD";
+			player1.name = "LEVEL2";
 		}
 		player1.crash = false;
 		clear = true;
@@ -186,17 +185,15 @@ public class Arena extends Canvas implements Runnable {
 		}
 		else if ( player == Tron.LEVEL1 ) {
 			player2 = myplayer2;
-			player2.name = "MY2";
+			player2.name = "LEVEL1_2";
 		}
 		else if( player == Tron.LEVEL2 ) {
 			System.out.println("Select Level2");
-			System.out.println(floodplayer2.name);
 			player2 = floodplayer2;
-			System.out.println(player2.name);
-			player2.name = "FLOOD";
+			player2.name = "LEVEL2_2";
 		}
 		else{
-			player2 = humanplayer;
+			player2 = humanplayer2;
 		}
 		player2.crash = false;
 		clear = true;
@@ -269,9 +266,9 @@ public class Arena extends Canvas implements Runnable {
 	    }
 	    catch ( InterruptedException e ) {
 	    }
-	    if ( player1 != null && player2 != null) { // hack hack
-		player1.newPos();
-		player2.newPos();
+	    if ( (player1 != null)&&(player2 != null) ) { // hack hack
+	    	player1.newPos();
+			player2.newPos();
 	    }
 	}
     } /* end of run() */

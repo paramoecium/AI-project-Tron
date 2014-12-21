@@ -9,8 +9,6 @@
 
 
 import java.awt.*;
-import java.lang.*;
-import java.applet.*;
 
 
 
@@ -91,7 +89,6 @@ public class Player {
      */
     public int whereDoIGo() {
 	// default player is constant
-	//System.out.println("Should not be called");
 	return d;
     } // end of whereDoIGo()
 
@@ -127,7 +124,7 @@ public class Player {
 		crash = markBoard( d );
 		if ( crash ) {
 			printCause();
-			arena.state = arena.RESTARTING;
+			arena.state = Arena.RESTARTING;
 		}
     } /* end of step() */
 

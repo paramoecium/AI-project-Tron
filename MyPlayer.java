@@ -65,7 +65,10 @@ public class MyPlayer extends Player {
 	//return( Math.abs( random.nextInt() % 4 ));
 	// "tit for tat" player (copy human)
 	//return( arena.player2.d );
-		return avoidCollision(x1, y1, d);
+    	int next_d = -1;
+    	next_d = alongWall(x1, y1, d);
+		if(next_d ==-1) next_d = avoidCollision(x1, y1, d);
+		return next_d;
 
     } /* end of whereDoIGo() */
 
@@ -126,7 +129,22 @@ public class MyPlayer extends Player {
 				return leftScore[0];
 		}
 	}
+	public int alongWall(int currentx, int currenty, int currentDirection) {
+		Playerstate p = this.getCurrentState();
+		Integer[] legalMoves =  p.getLegalMoves();
+//		if((random.nextInt() % 8)==0){
+//			legalMoves =  p.getShuffledLegalMoves();
+//		}
+		int next_d = -1;
+		for(int legal_d : legalMoves){
+			next_d = legal_d;
+			if(p.narrowAlley(legal_d) != true) break;
+		}
+		
 
+		return next_d;
+	}
+	
 	public void printCause() {
 	}
 
