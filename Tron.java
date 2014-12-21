@@ -32,19 +32,18 @@ public class Tron extends JFrame {
     public static Label  statusLabel;
     public static Button startButton;
     public Button quitButton;
-    public Button pickGPButton;
-    public Button pickNNButton;
-    public Button pickMyButton;
+    public JComboBox<String> pickP1Box;
+    public JComboBox<String> pickP2Box;
     public static Random random;
 
     public static String  gpfile = "gp.2220000";
     public static String  nnfile = "nn.700";
     
-    public static final int NONE  = -1;
-    public static final int HUMAN = 0;
-    public static final int GP    = 1;
-    public static final int NN    = 2;
-    public static final int MY    = 3;
+    public static final int HUMAN 		= 0;
+    public static final int LEVEL1    	= 1;
+    public static final int LEVEL2    	= 2;
+    public static final int GP    		= -1;
+    public static final int NN    		= -2;
     public static int player1;
     public static int player2;
 
@@ -61,7 +60,7 @@ public class Tron extends JFrame {
 	final Tron tron = new Tron();
 	tron.setTitle( "Tron" );
 	
-	Tron.player1 = NONE;
+	Tron.player1 = LEVEL1;
 	Tron.player2 = HUMAN;
 
 	tron.robotScore = 0;
@@ -87,52 +86,86 @@ public class Tron extends JFrame {
 	c.gridwidth = 1;
 	c.weightx   = 1;
 	c.anchor    = GridBagConstraints.CENTER;
+	
 
-	tron.pickGPButton = new Button( "GP robot" );
-	tron.pickGPButton.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e){
-			statusLabel.setText( "robot will be controlled by GP" );
-			player1 = GP;
-			arena.selectPlayer1( player1,gpfile );
+    tron.pickP1Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN"});
+	tron.pickP1Box.addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent  e) {
 			startButton.setEnabled(true);
-			tron.requestFocusInWindow();
-		}
+        	if (e.getStateChange() == ItemEvent.SELECTED) {
+		        String playerType = (String)e.getItem();
+		        if (playerType.equals("HUMAN")){
+		        	player1 = HUMAN;
+		        }
+		        else if (playerType.equals("GP")){
+		        	player1 = GP;
+		        } 
+		        else if (playerType.equals("NN")){
+		        	player1 = NN;
+		        } 
+		        else if (playerType.equals("LEVEL2")){
+		        	player1 = LEVEL2;
+		        } 
+		        else {
+		        	player1 = LEVEL1;
+		        }
+		        statusLabel.setText( "Player 1 is "+ playerType );
+        	}
+        	arena.selectPlayer1( player1 );
+        	tron.requestFocusInWindow();
+        }
 	});
 	c.gridx = 0;
 	c.gridy = 1;
-	layout.setConstraints( tron.pickGPButton,c );
-	tron.add( tron.pickGPButton );
+	layout.setConstraints( tron.pickP1Box,c );
+	tron.add( tron.pickP1Box );
 	
-	tron.pickNNButton = new Button( "NN robot" );
-	tron.pickNNButton.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e){
-			statusLabel.setText( "robot will be controlled by NN" );
-			player1 = NN;
-			arena.selectPlayer1( player1,nnfile );
-			startButton.setEnabled(true);
-			tron.requestFocusInWindow();
-		}
+	tron.pickP2Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN"});
+	tron.pickP2Box.addItemListener(new ItemListener() {
+        public void itemStateChanged(ItemEvent  e) {
+        	if (e.getStateChange() == ItemEvent.SELECTED) {
+		        String playerType = (String)e.getItem();
+		        if (playerType.equals("HUMAN")){
+		        	player2 = HUMAN;
+		        }
+		        else if (playerType.equals("GP")){
+		        	player2 = GP;
+		        } 
+		        else if (playerType.equals("NN")){
+		        	player2 = NN;
+		        } 
+		        else if (playerType.equals("LEVEL2")){
+		        	player2 = LEVEL2;
+		        } 
+		        else {
+		        	player2 = LEVEL1;
+		        }
+		        statusLabel.setText( "Player 2 is "+ playerType );
+        	}
+        	arena.selectPlayer2( player2 );
+        	tron.requestFocusInWindow();
+        }
 	});
 	c.gridx = 1;
 	c.gridy = 1;
-	layout.setConstraints( tron.pickNNButton,c );
-	tron.add( tron.pickNNButton );
+	layout.setConstraints( tron.pickP2Box,c );
+	tron.add( tron.pickP2Box );
 	
-	tron.pickMyButton = new Button( "My robot" );
-	tron.pickMyButton.addActionListener(new ActionListener(){
-		public void actionPerformed(ActionEvent e){
-			statusLabel.setText( "robot will be controlled by NN" );
-			player1 = MY;
-			arena.selectPlayer1( player1,nnfile );
-			startButton.setEnabled(true);
-			tron.requestFocusInWindow();
-		}
-	});
+//	tron.pickMyButton = new Button( "My robot" );
+//	tron.pickMyButton.addActionListener(new ActionListener(){
+//		public void actionPerformed(ActionEvent e){
+//			statusLabel.setText( "robot will be controlled by NN" );
+//			player1 = MY;
+//			arena.selectPlayer1( player1,nnfile );
+//			startButton.setEnabled(true);
+//			tron.requestFocusInWindow();
+//		}
+//	});
 	c.gridx = 2;
 	c.gridy = 1;
-	layout.setConstraints( tron.pickMyButton,c );
-	tron.add( tron.pickMyButton );
-	
+//	layout.setConstraints( tron.pickMyButton,c );
+//	tron.add( tron.pickMyButton );
+		
 	Tron.startButton = new Button( "start" );
 	Tron.startButton.addActionListener(new ActionListener(){
 		public void actionPerformed(ActionEvent e){
@@ -144,7 +177,7 @@ public class Tron extends JFrame {
 	c.gridy = 1;
 	layout.setConstraints( Tron.startButton,c );
 	tron.add( Tron.startButton );
-	Tron.startButton.setEnabled(false);
+	startButton.setEnabled(false);
 	
 	tron.quitButton = new Button( "quit" );
 	tron.quitButton.addActionListener(new ActionListener(){

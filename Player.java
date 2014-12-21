@@ -91,6 +91,7 @@ public class Player {
      */
     public int whereDoIGo() {
 	// default player is constant
+	//System.out.println("Should not be called");
 	return d;
     } // end of whereDoIGo()
 

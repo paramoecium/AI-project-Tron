@@ -29,8 +29,13 @@ public class Arena extends Canvas implements Runnable {
     public  Player           player2;
     public  GPPlayer         gpplayer;
     public  NNPlayer         nnplayer;
-    public  FloodPlayer         myplayer;
-    public  GPPlayer         gpplayer2;
+    public  MyPlayer         myplayer;
+	public	FloodPlayer		 floodplayer;
+	public  HumanPlayer		 humanplayer;
+	public	GPPlayer		 gpplayer2;
+    public  NNPlayer         nnplayer2;
+    public  MyPlayer         myplayer2;
+	public	FloodPlayer		 floodplayer2;
     public  boolean          board[][];
     public  boolean          clear;
     public  boolean          startAgain = false;
@@ -80,10 +85,15 @@ public class Arena extends Canvas implements Runnable {
 	}
 	gpplayer = new GPPlayer( "gp",Color.pink,this,xmax,ymax,(byte)1,null );
 	nnplayer = new NNPlayer( "nn",Color.pink,this,xmax,ymax,(byte)1,null );
-	//myplayer = new MyPlayer( "my",Color.pink,this,xmax,ymax,(byte)1 );
-	myplayer = new FloodPlayer( "my",Color.pink,this,xmax,ymax,(byte)1 );
-	//gpplayer2 = new GPPlayer( "GP2",Color.cyan,this,xmax,ymax,(byte)2,null );
-	player2 = new HumanPlayer( "human",Color.cyan,this,xmax,ymax,(byte)2 );
+	myplayer = new MyPlayer( "my",Color.pink,this,xmax,ymax,(byte)1 );
+	floodplayer = new FloodPlayer( "fl",Color.pink,this,xmax,ymax,(byte)1 );
+	humanplayer = new HumanPlayer( "human",Color.cyan,this,xmax,ymax,(byte)2 );
+	gpplayer2 = new GPPlayer( "gp2",Color.cyan,this,xmax,ymax,(byte)2,null);
+	nnplayer2 = new NNPlayer( "nn2",Color.cyan,this,xmax,ymax,(byte)2,null);
+	myplayer2 = new MyPlayer( "my2",Color.cyan,this,xmax,ymax,(byte)2);
+	floodplayer2 = new FloodPlayer( "fl2",Color.cyan,this,xmax,ymax,(byte)2);
+//	player2 = humanplayer;
+//	player2.crash = false;
 	if ( grayImage != null ) {
 	    this.getGraphics().drawImage( grayImage,0,0,this ); 
 	}
@@ -127,36 +137,73 @@ public class Arena extends Canvas implements Runnable {
      * interface and selects a robot controller
      *
      */
-    public void selectPlayer1( 
-			      int player,
-			      String filename
-			      ) {
-	if ( player == Tron.GP ) {
-	    gpplayer.getStrategy( filename );
-	    player1 = gpplayer;
-	    player1.name = "GP";
-	}
-	else if ( player == Tron.NN ) {
-	    nnplayer.readNetwork( filename );
-	    player1 = nnplayer;
-	    player1.name = "NN";
-		//gpplayer2.getStrategy( "gp.2220000" );
-		//player2 = gpplayer2;
-		//player2.name = "GP2";
-	}
-	else if ( player == Tron.MY ) {
-	    player1 = myplayer;
-	    player1.name = "MY";
-		//gpplayer2.getStrategy( "gp.2220000" );
-		//player2 = gpplayer2;
-		//player2.name = "GP2";
-	}
-	player1.crash = false;
-	player2.crash = false;
-	clear = true;
-	repaint();
+    public void selectPlayer1( int player)
+	{
+		if ( player == Tron.GP ) {
+			gpplayer.getStrategy("gp.2220000");
+			player1 = gpplayer;
+			player1.name = "GP";
+		}
+		else if ( player == Tron.NN ) {
+			nnplayer.readNetwork("nn.700");
+			player1 = nnplayer;
+			player1.name = "NN";
+		}
+		else if ( player == Tron.LEVEL1 ) {
+			player1 = myplayer;
+			player1.name = "MY";
+		}
+		else if ( player == Tron.LEVEL2 ) {
+			player1 = floodplayer;
+			player1.name = "FLOOD";
+		}
+		player1.crash = false;
+		clear = true;
+		repaint();
     } /* end of selectPlayer1() */
     
+	
+
+	/**
+     * selectPlayer2()
+     *
+     * this method is called when the user clicks on a button in the
+     * interface and selects a robot controller
+     *
+     */
+    public void selectPlayer2( int player)
+	{
+		System.out.println(player);
+		if ( player == Tron.GP ) {
+			gpplayer2.getStrategy("gp.2220000");
+			player2 = gpplayer2;
+			player2.name = "GP2";
+		}
+		else if ( player == Tron.NN ) {
+			nnplayer2.readNetwork("nn.700");
+			player2 = nnplayer2;
+			player2.name = "NN2";
+		}
+		else if ( player == Tron.LEVEL1 ) {
+			player2 = myplayer2;
+			player2.name = "MY2";
+		}
+		else if( player == Tron.LEVEL2 ) {
+			System.out.println("Select Level2");
+			System.out.println(floodplayer2.name);
+			player2 = floodplayer2;
+			System.out.println(player2.name);
+			player2.name = "FLOOD";
+		}
+		else{
+			player2 = humanplayer;
+		}
+		player2.crash = false;
+		clear = true;
+		repaint();
+    } /* end of selectPlayer2() */
+
+
 
     
     /**
@@ -222,7 +269,7 @@ public class Arena extends Canvas implements Runnable {
 	    }
 	    catch ( InterruptedException e ) {
 	    }
-	    if ( player1 != null ) { // hack hack
+	    if ( player1 != null && player2 != null) { // hack hack
 		player1.newPos();
 		player2.newPos();
 	    }

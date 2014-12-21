@@ -16,7 +16,7 @@ public class Playerstate {
     public static void main( String args[] ) { 
     	Arena a = new Arena(new Tron(), 8, 4, 1);
     	a.start();
-		a.selectPlayer1( 1,"gp.2220000");
+		a.selectPlayer1( 1);
 		a.startAgain = true;
     	Playerstate p = new Playerstate(a, a.player1);
     	System.out.println("getEnemyHead"+p.getEnemyHead());
