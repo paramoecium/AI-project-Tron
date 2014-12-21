@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.awt.Point;
 public class Playerstate {
     public  Player           	player1;
@@ -13,15 +14,7 @@ public class Playerstate {
      * test
      *
      */
-    public static void main( String args[] ) { 
-    	Arena a = new Arena(new Tron(), 8, 4, 1);
-    	a.start();
-		a.selectPlayer1( 1);
-		a.startAgain = true;
-    	Playerstate p = new Playerstate(a, a.player1);
-    	System.out.println("getEnemyHead"+p.getEnemyHead());
-    }
-    
+
 	public Playerstate( Arena arena, Player setCurrentPlayer){
 		player1 = arena.player1;
 		player2 = arena.player2;
@@ -130,15 +123,52 @@ public class Playerstate {
                     dx = 1; dy = 0;
                     break;
             }
-            nextx = (player_head_X+dx) % currentPlayer.x_max;
-            nexty = (player_head_Y+dy) % currentPlayer.y_max;
+            nextx = (player_head_X+dx+currentPlayer.x_max) % currentPlayer.x_max;
+            nexty = (player_head_Y+dy+currentPlayer.y_max) % currentPlayer.y_max;
             if( board[nextx][nexty] == false){
                 moves.add(i);
             }
         }
-        return (Integer[]) moves.toArray();
+        return (Integer[]) moves.toArray(new Integer[0]);
     }
 	
+	public Integer [] getShuffledLegalMoves() {
+		int player_head_X, player_head_Y;
+		if (currentPlayer==player1){
+			player_head_X = player1_head_X;
+			player_head_Y = player1_head_Y;
+		}
+		else{
+			player_head_X = player2_head_X;
+			player_head_Y = player2_head_Y;
+		}
+		ArrayList<Integer> moves = new ArrayList<Integer>();
+        int dx = 0, dy = 0;
+        int nextx, nexty;
+        for(int i = 0; i < 4; i++){
+            switch(i){
+                case Player.NORTH:
+                    dx = 0; dy = -1;
+                    break;
+                case Player.SOUTH:
+                    dx = 0; dy = 1;
+                    break;
+                case Player.WEST:
+                    dx = -1; dy = 0;
+                    break;
+                case Player.EAST:
+                    dx = 1; dy = 0;
+                    break;
+            }
+            nextx = (player_head_X+dx+currentPlayer.x_max) % currentPlayer.x_max;
+            nexty = (player_head_Y+dy+currentPlayer.y_max) % currentPlayer.y_max;
+            if( board[nextx][nexty] == false){
+                moves.add(i);
+            }
+            Collections.shuffle(moves);
+        }
+        return (Integer[]) moves.toArray(new Integer[0]);
+    }
 	public int manhattan(){
 		return Math.abs(player1_head_X-player2_head_X)+Math.abs(player1_head_Y-player2_head_Y);
 	}

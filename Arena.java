@@ -9,16 +9,15 @@
 
 
 import java.awt.*;
-import java.lang.*;
-import java.applet.*;
-import java.util.Vector;
-import java.net.*;
-import java.io.*;
 
 
 public class Arena extends Canvas implements Runnable {
     
-    Dimension grayDimension;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	Dimension grayDimension;
     Image     grayImage;
     Graphics  grayGraphics;
     

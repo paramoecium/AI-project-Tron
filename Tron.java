@@ -9,8 +9,6 @@
 
 
 import java.awt.*;
-import java.lang.*;
-import java.applet.*;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -112,9 +110,9 @@ public class Tron extends JFrame {
 		        statusLabel.setText( "Player 1 is "+ playerType );
         	}
         	arena.selectPlayer1( player1 );
-        	if((Tron.arena.player1 != null)&&(Tron.arena.player2 != null)){
-        		startButton.setEnabled(true);
-        	}
+//        	if((Tron.arena.player1 != null)&&(Tron.arena.player2 != null)){
+//        		startButton.setEnabled(true);
+//        	}
         	tron.requestFocusInWindow();
         }
 	});
@@ -147,9 +145,9 @@ public class Tron extends JFrame {
 		        statusLabel.setText( "Player 2 is "+ playerType );
         	}
         	arena.selectPlayer2( player2 );
-        	if((Tron.arena.player1 != null)&&(Tron.arena.player2 != null)){
-        		startButton.setEnabled(true);
-        	}
+//        	if((Tron.arena.player1 != null)&&(Tron.arena.player2 != null)){
+//        		startButton.setEnabled(true);
+//        	}
         	tron.requestFocusInWindow();
         }
 	});
@@ -157,17 +155,7 @@ public class Tron extends JFrame {
 	c.gridy = 1;
 	layout.setConstraints( tron.pickP2Box,c );
 	tron.add( tron.pickP2Box );
-	
-//	tron.pickMyButton = new Button( "My robot" );
-//	tron.pickMyButton.addActionListener(new ActionListener(){
-//		public void actionPerformed(ActionEvent e){
-//			statusLabel.setText( "robot will be controlled by NN" );
-//			player1 = MY;
-//			arena.selectPlayer1( player1,nnfile );
-//			startButton.setEnabled(true);
-//			tron.requestFocusInWindow();
-//		}
-//	});
+
 	c.gridx = 2;
 	c.gridy = 1;
 //	layout.setConstraints( tron.pickMyButton,c );
@@ -184,7 +172,7 @@ public class Tron extends JFrame {
 	c.gridy = 1;
 	layout.setConstraints( Tron.startButton,c );
 	tron.add( Tron.startButton );
-	startButton.setEnabled(false);
+//	startButton.setEnabled(false);
 	
 	tron.quitButton = new Button( "quit" );
 	tron.quitButton.addActionListener(new ActionListener(){
@@ -216,7 +204,7 @@ public class Tron extends JFrame {
 	tron.addKeyListener(new KeyListener() {
 		public void keyPressed(KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_SPACE){
-				if(startButton.isEnabled()) arena.startAgain = true;
+				arena.startAgain = true;
 				tron.requestFocusInWindow();
 			}
 		}
@@ -229,6 +217,9 @@ public class Tron extends JFrame {
 	tron.setFocusable(true);
 	Tron.arena.start();
 
+	arena.selectPlayer1( player1 );
+	arena.selectPlayer2( player2 );
+	tron.requestFocusInWindow();
     } /* end of main() */
 
     
