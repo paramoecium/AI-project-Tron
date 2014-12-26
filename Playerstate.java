@@ -10,6 +10,8 @@ public class Playerstate {
 	public 	int 				player2_head_Y;
     public  boolean          	board[][];
     public  Player				currentPlayer;
+    
+    private boolean				crashed = false;
     /**
      * test
      *
@@ -82,7 +84,9 @@ public class Playerstate {
 			    break;
 		}
 		Playerstate newPlayerstate= new Playerstate(this);
-		newPlayerstate.board[player_head_X][player_head_Y] = true;
+		if(newPlayerstate.board[player_head_X][player_head_Y] == false)
+			newPlayerstate.board[player_head_X][player_head_Y] = true;
+		else newPlayerstate.crashed = true;
 		newPlayerstate.currentPlayer = nextPlayer;
 		if (currentPlayer==player1){
 			newPlayerstate.player1_head_X = player_head_X ;
@@ -196,11 +200,6 @@ public class Playerstate {
 	/*
 	 * evaluation and help functions
 	 */
-	public int evaluation(){
-		
-		
-		return 0;
-	}
 	
 	public boolean narrowAlley(int direction){
 		int player_head_X, player_head_Y;
@@ -255,4 +254,40 @@ public class Playerstate {
 		return false;
 	}
 	
+	public boolean isWall(int X, int Y){
+		return board[X][Y];
+	}
+	
+	public boolean isGoal(){
+		return crashed;
+	}
+	
+	public int utility(Player p){
+		//make sure someone was crashed before calling this function
+		if(crashed){
+			if(currentPlayer==p) return inverse_norm();
+			else return -inverse_norm();
+		}
+		else return 0;		
+	}
+	/*return number of walls*/
+	public int norm(){
+		int n = 0;
+		for(boolean[] row:board){
+			for(boolean e:row){
+				if(e) n++;
+			}
+		}
+		return n;
+	}
+	/*return number of blanks*/
+	public int inverse_norm(){
+		int n = 0;
+		for(boolean[] row:board){
+			for(boolean e:row){
+				if(!e) n++;
+			}
+		}
+		return n;
+	}
 }

@@ -29,8 +29,8 @@ public class HumanPlayer extends Player {
     // handler; doesn't have to implement whereDoIGo
     
     
-    public void go( int x,int y ) {
-	super.go(x,y); // do everything the original GO does, plus custom inits
+    public void go( int x, int y, int init_d) {
+	super.go(x,y, init_d); // do everything the original GO does, plus custom inits
 	didsomething = false;
     } // end of go()
 

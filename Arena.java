@@ -52,6 +52,7 @@ public class Arena extends Canvas implements Runnable {
     public int               pixelSize;
     public boolean			 boarderOn = false;
     
+    public int				 GAMESPEED = 300;
     /**
      * Arena constructor
      *
@@ -262,7 +263,7 @@ public class Arena extends Canvas implements Runnable {
 	    }
 	    repaint();
 	    try { 
-		Thread.sleep( 30 );
+		Thread.sleep( GAMESPEED );
 	    }
 	    catch ( InterruptedException e ) {
 	    }
