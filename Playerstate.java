@@ -188,8 +188,8 @@ public class Playerstate {
 	public void printBoard( boolean [][] board){
 		for (boolean[] u: board) {
 		    for (boolean e: u) {
-		    	if(e) 	System.out.print("T ");
-		    	else 	System.out.print("F ");
+		    	if(e) 	System.out.print("X ");
+		    	else 	System.out.print("  ");
 		    }
 	        System.out.println();
 		}

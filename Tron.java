@@ -66,7 +66,7 @@ public class Tron extends JFrame {
 	
 	int board_X_max = 3;
 	int board_Y_max = 3;
-	int pixelSize = 20;
+	int pixelSize = 20;//Player.linewidth
 	Tron.arena = new Arena( tron, board_X_max, board_Y_max, pixelSize);
 	Tron.arena.setSize( pixelSize*board_X_max, pixelSize*board_Y_max );
 	

@@ -131,18 +131,17 @@ public class MyPlayer extends Player {
 	}
 	public int alongWall(int currentx, int currenty, int currentDirection) {
 		Playerstate p = this.getCurrentState();
-		Integer[] legalMoves =  p.getLegalMoves();
+		ArrayList<Integer> legalMoves =  p.getLegalMoves();
 //		if((random.nextInt() % 8)==0){
 //			legalMoves =  p.getShuffledLegalMoves();
 //		}
-		int next_d = legalMoves[0];
 		for(int legal_d : legalMoves){
 			if(legal_d == currentDirection) continue;
 			if((p.narrowAlley(legal_d) != true)&&(p.narrowAlley( (legal_d+2)%4 ) == true)) break;
 		}
 		
 
-		return next_d;
+		return legalMoves.get(0);
 	}
 	
 	public void printCause() {

@@ -63,7 +63,7 @@ public class MiniMax extends Player {
 		
 		Playerstate currentState = getCurrentState ();
 		ArrayList<Integer> actions = new ArrayList<Integer> ();
-		double score = minimaxSearch(currentState, 10000, actions);
+		double score = negaScoutSearch(currentState, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 10000, actions);
 		if(actions.size() != 0)
 			return actions.get(actions.size()-1);
 		else{
@@ -81,9 +81,9 @@ public class MiniMax extends Player {
 		if(currentState.isGoal() || currentDepth == 0) {
 			return (double)(currentState.utility(this));
 		}
-		System.out.println(currentDepth);
-		currentState.printBoard();
-		System.out.println("\n");
+		//System.out.println(currentDepth);
+		//currentState.printBoard();
+		//System.out.println("\n");
 
 		ArrayList<Integer> legalMoves = currentState.getLegalMoves();
 		if( legalMoves.size() == 0)
@@ -112,6 +112,44 @@ public class MiniMax extends Player {
 			return sum/scores.size();
 		}
 	}
+	
+	public double negaScoutSearch(Playerstate currentState, double alpha, double beta, int currentDepth, ArrayList<Integer> path) 
+	{
+
+		if(currentState.isGoal() || currentDepth == 0) {
+			return (double)(currentState.utility(this));
+		}
+		
+		//System.out.println(currentDepth);
+		//currentState.printBoard();
+		//System.out.println("\n");
+
+		double b = beta, v = Double.NEGATIVE_INFINITY;//initial window is [-beta,-alpha]
+		
+		ArrayList<Integer> legalMoves = currentState.getLegalMoves();
+		if( legalMoves.size() == 0)
+			legalMoves.add(d);
+
+		ArrayList<Playerstate> successors = new ArrayList<Playerstate> () ;
+		ArrayList<Double> scores = new ArrayList<Double>() ;
+		for(int move: legalMoves){
+			successors.add(currentState.getSuccessor(move));
+		}
+		for(Playerstate successor: successors){
+			double result = -negaScoutSearch(successor, -b, -alpha, currentDepth-1, path);
+			if ( (alpha<result)&&(result<beta)&&(successor!=successors.get(0)) )
+				result = -negaScoutSearch(successor, -beta, -alpha, currentDepth-1, path);//full re-search
+			scores.add(result);
+			v = Math.max(v, result);
+			if (v>= beta) break;
+			alpha = Math.max(alpha, v);
+			b = alpha + 1;
+		}
+		int idx = scores.indexOf(v);
+		path.add(legalMoves.get(idx));
+		return v;
+	}
+	
 	
 	public void printCause() {
 	}
