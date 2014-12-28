@@ -31,6 +31,7 @@ public class Arena extends Canvas implements Runnable {
     public  MyPlayer         myplayer;
 	public	FloodPlayer		 floodplayer;
 	public  HumanPlayer		 humanplayer;
+	public  MiniMax			 minimax1;
     public  GPPlayer         gpplayer2;
     public  NNPlayer         nnplayer2;
     public  MyPlayer         myplayer2;
@@ -53,7 +54,7 @@ public class Arena extends Canvas implements Runnable {
     public int               pixelSize;
     public boolean			 boarderOn = false;
     
-    public int				 GAMESPEED = 300;
+    public int				 GAMESPEED = 30;
     /**
      * Arena constructor
      *
@@ -89,7 +90,8 @@ public class Arena extends Canvas implements Runnable {
 	nnplayer = new NNPlayer( "nn",Color.pink,this,xmax,ymax,(byte)1,null );
 	myplayer = new MyPlayer( "my",Color.pink,this,xmax,ymax,(byte)1 );
 	floodplayer = new FloodPlayer( "fl",Color.pink,this,xmax,ymax,(byte)1 );
-	humanplayer = new HumanPlayer( "human",Color.cyan,this,xmax,ymax,(byte)2 );
+	humanplayer = new HumanPlayer( "human",Color.pink,this,xmax,ymax,(byte)1 );
+	minimax1 = new MiniMax( "minimax2",Color.pink,this,xmax,ymax,(byte)1 );
 	gpplayer2 = new GPPlayer( "gp2",Color.cyan,this,xmax,ymax,(byte)2,null );
 	nnplayer2 = new NNPlayer( "nn2",Color.cyan,this,xmax,ymax,(byte)2,null );
 	myplayer2 = new MyPlayer( "my2",Color.cyan,this,xmax,ymax,(byte)2 );
@@ -152,7 +154,7 @@ public class Arena extends Canvas implements Runnable {
 			player1.name = "NN";
 		}
 		else if ( player == Tron.LEVEL1 ) {
-			player1 = myplayer;
+			player1 = minimax1;
 			player1.name = "LEVEL1";
 		}
 		else if ( player == Tron.LEVEL2 ) {

@@ -42,7 +42,7 @@ public class Player {
     public int          score;
 
     // for graphic2D
-    int lineWidth = 20;//must equal to pizelSize
+    int lineWidth = 7;//must equal to pizelSize
 
     /**
      * Player constructor

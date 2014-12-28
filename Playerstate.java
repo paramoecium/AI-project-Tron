@@ -136,7 +136,7 @@ public class Playerstate {
         return new ArrayList<Integer>( moves );
     }
 	
-	public Integer [] getShuffledLegalMoves() {
+	public ArrayList<Integer> getShuffledLegalMoves() {
 		int player_head_X, player_head_Y;
 		if (currentPlayer==player1){
 			player_head_X = player1_head_X;
@@ -171,7 +171,7 @@ public class Playerstate {
             }
             Collections.shuffle(moves);
         }
-        return (Integer[]) moves.toArray(new Integer[0]);
+        return new ArrayList<Integer>( moves );
     }
 	public int manhattan(){
 		return Math.abs(player1_head_X-player2_head_X)+Math.abs(player1_head_Y-player2_head_Y);
@@ -265,10 +265,13 @@ public class Playerstate {
 	public int utility(Player p){
 		//make sure someone was crashed before calling this function
 		if(crashed){
-			if(currentPlayer==p) return inverse_norm();
-			else return -inverse_norm();
+			if(currentPlayer==p) return 10*inverse_norm();
+			else return -10*inverse_norm();
 		}
-		else return 0;		
+		else{
+			if(currentPlayer==p) return inverse_norm()-manhattan();
+			else return -inverse_norm()-manhattan();		
+		}
 	}
 	/*return number of walls*/
 	public int norm(){
