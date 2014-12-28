@@ -123,31 +123,41 @@ public class MiniMax extends Player {
 		//System.out.println(currentDepth);
 		//currentState.printBoard();
 		//System.out.println("\n");
-
-		double b = beta, v = Double.NEGATIVE_INFINITY;//initial window is [-beta,-alpha]
-		
-		ArrayList<Integer> legalMoves = currentState.getLegalMoves();
-		if( legalMoves.size() == 0)
-			legalMoves.add(d);
-
-		ArrayList<Playerstate> successors = new ArrayList<Playerstate> () ;
-		ArrayList<Double> scores = new ArrayList<Double>() ;
-		for(int move: legalMoves){
-			successors.add(currentState.getSuccessor(move));
+			double b = beta, v = Double.NEGATIVE_INFINITY;//initial window is [-beta,-alpha]
+			
+			ArrayList<Integer> legalMoves = currentState.getLegalMoves();
+			if( legalMoves.size() == 0)
+				legalMoves.add(d);
+	
+			ArrayList<Playerstate> successors = new ArrayList<Playerstate> () ;
+			ArrayList<Double> scores = new ArrayList<Double>() ;
+			for(int move: legalMoves){
+				successors.add(currentState.getSuccessor(move));
+			}
+		if(currentState.currentPlayer == this){
+			for(Playerstate successor: successors){
+				double result = -negaScoutSearch(successor, -b, -alpha, currentDepth-1, path);
+				if ( (alpha<result)&&(result<beta)&&(successor!=successors.get(0)) )
+					result = -negaScoutSearch(successor, -beta, -alpha, currentDepth-1, path);//full re-search
+				scores.add(result);
+				v = Math.max(v, result);
+				if (v>= beta) break;
+				alpha = Math.max(alpha, v);
+				b = alpha + 1;
+			}
+			int idx = scores.indexOf(v);
+			path.add(legalMoves.get(idx));
+			return v;
 		}
-		for(Playerstate successor: successors){
-			double result = -negaScoutSearch(successor, -b, -alpha, currentDepth-1, path);
-			if ( (alpha<result)&&(result<beta)&&(successor!=successors.get(0)) )
-				result = -negaScoutSearch(successor, -beta, -alpha, currentDepth-1, path);//full re-search
-			scores.add(result);
-			v = Math.max(v, result);
-			if (v>= beta) break;
-			alpha = Math.max(alpha, v);
-			b = alpha + 1;
+		else{
+			for(Playerstate successor: successors){
+				scores.add(-negaScoutSearch(successor, -beta, -alpha, currentDepth-1, path));//full re-search
+			}
+			double sum = 0;
+			for(Double d : scores)
+				sum += d;
+			return sum/scores.size();
 		}
-		int idx = scores.indexOf(v);
-		path.add(legalMoves.get(idx));
-		return v;
 	}
 	
 	
