@@ -36,6 +36,7 @@ public class Arena extends Canvas implements Runnable {
     public  MyPlayer         myplayer2;
 	public	FloodPlayer		 floodplayer2;
 	public  HumanPlayer		 humanplayer2;
+	public  MiniMax			 minimax2;
     public  boolean          board[][];
     public  boolean          clear;
     public  boolean          startAgain = false;
@@ -94,6 +95,7 @@ public class Arena extends Canvas implements Runnable {
 	myplayer2 = new MyPlayer( "my2",Color.cyan,this,xmax,ymax,(byte)2 );
 	floodplayer2 = new FloodPlayer( "fl2",Color.cyan,this,xmax,ymax,(byte)2 );
 	humanplayer2 = new HumanPlayer( "human2",Color.cyan,this,xmax,ymax,(byte)2 );
+	minimax2 = new MiniMax( "minimax2",Color.cyan,this,xmax,ymax,(byte)2 );
 	if ( grayImage != null ) {
 	    this.getGraphics().drawImage( grayImage,0,0,this ); 
 	}
@@ -185,7 +187,8 @@ public class Arena extends Canvas implements Runnable {
 			player2.name = "NN2";
 		}
 		else if ( player == Tron.LEVEL1 ) {
-			player2 = myplayer2;
+			//player2 = myplayer2;
+			player2 = minimax2;
 			player2.name = "LEVEL1_2";
 		}
 		else if( player == Tron.LEVEL2 ) {

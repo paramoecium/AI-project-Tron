@@ -99,7 +99,7 @@ public class Playerstate {
 		return newPlayerstate;
 	}
 	
-	public Integer [] getLegalMoves() {
+	public ArrayList<Integer> getLegalMoves() {
 		int player_head_X, player_head_Y;
 		if (currentPlayer==player1){
 			player_head_X = player1_head_X;
@@ -133,7 +133,7 @@ public class Playerstate {
                 moves.add(i);
             }
         }
-        return (Integer[]) moves.toArray(new Integer[0]);
+        return new ArrayList<Integer>( moves );
     }
 	
 	public Integer [] getShuffledLegalMoves() {
