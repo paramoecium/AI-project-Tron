@@ -14,7 +14,7 @@ import java.util.*;
 
 
 
-public class MiniMax extends Player {
+public class MiniMaxPlayer extends MyPlayer {
 
 
     public boolean didsomething = false;
@@ -27,13 +27,8 @@ public class MiniMax extends Player {
      * you probably don't need to modify this method!
      *
      */
-    public MiniMax( String n, Color c, Arena a, int x, int y, byte number ) {
-		name  = n;
-		color = c;
-		arena = a;
-		x_max = x;
-		y_max = y;
-		player_no = number;
+    public MiniMaxPlayer( String n, Color c, Arena a, int x, int y, byte number ) {
+    	super(n, c, a, x, y, number); 
 		random = new Random();
     } /* end of MyPlayer constructor */
 
@@ -63,7 +58,7 @@ public class MiniMax extends Player {
 		
 		Playerstate currentState = getCurrentState ();
 		ArrayList<Integer> actions = new ArrayList<Integer> ();
-		double score = alphaBetaSearch(currentState, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 10, actions);
+		double score = alphaBetaSearch(currentState, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 12, actions);
 		if(actions.size() != 0)
 			return actions.get(actions.size()-1);
 		else{

@@ -1,10 +1,5 @@
 /**
- * FloodPlayer class
- *
- * originally written spring-2006/sklar for teaching
- *
- * ATTENTION STUDENTS:
- * you need to modify the method called "whereDoIGo()", below
+ * MixPlayer class
  *
  */
 
@@ -13,7 +8,7 @@ import java.util.*;
 
 
 
-public class FloodPlayer extends MyPlayer {
+public class MixPlayer extends MyPlayer {
 
 
     public boolean didsomething = false;
@@ -29,20 +24,14 @@ public class FloodPlayer extends MyPlayer {
      * you probably don't need to modify this method!
      *
      */
-    public FloodPlayer( String n, Color c, Arena a, int x, int y, byte number ) {
+    public MixPlayer( String n, Color c, Arena a, int x, int y, byte number ) {
 		super(n, c, a, x, y, number); 
-	//name  = n;
-	//color = c;
-	//arena = a;
-	//x_max = x;
-	//y_max = y;
-	//player_no = number;
 		random = new Random();
 		floodBoard = new int[x_max][y_max];
 		cleanFloodBoard();
 		actionStack = new Stack<Integer> ();
 		step = 3;
-		barrier = 200;
+		barrier = Integer.MAX_VALUE;
     } /* end of MyPlayer constructor */
 
 
@@ -68,33 +57,40 @@ public class FloodPlayer extends MyPlayer {
      *
      */
     public int whereDoIGo() {
-	// move randomly
-	//return( Math.abs( random.nextInt() % 4 ));
-	// "tit for tat" player (copy human)
-	//return( arena.player2.d );
-	//System.out.print(step);
-	//System.out.print(actionStack.size());
-		step --;
-		if(step % 2 == 0){
-			actionStack.removeAllElements();
-			flood();
-			if(actionStack.empty() == true) {
-				return avoidCollision(x1, y1, d); 
-			}
-			step = 2;
-			return (actionStack.pop().intValue());
-		}
-		else{
-			if(actionStack.empty() == false)
-				return (actionStack.pop().intValue());
+    	Playerstate currentState = getCurrentState ();
+    	if(currentState.manhattan()<5){
+			ArrayList<Integer> actions = new ArrayList<Integer> ();
+			double score = alphaBetaSearch(currentState, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 10, actions);
+			if(actions.size() != 0)
+				return actions.get(actions.size()-1);
 			else{
-				flood();
-				if(actionStack.empty() == true) {
-					return avoidCollision(x1, y1, d); 
-				}
-				return (actionStack.pop().intValue());
-			}	
-		}
+				System.err.println("Oops!");
+				return d;
+			}
+    	}
+    	else{
+    		step --;
+    		if(step % 2 == 0){
+    			actionStack.removeAllElements();
+    			flood();
+    			if(actionStack.empty() == true) {
+    				return avoidCollision(x1, y1, d); 
+    			}
+    			step = 2;
+    			return (actionStack.pop().intValue());
+    		}
+    		else{
+    			if(actionStack.empty() == false)
+    				return (actionStack.pop().intValue());
+    			else{
+    				flood();
+    				if(actionStack.empty() == true) {
+    					return avoidCollision(x1, y1, d); 
+    				}
+    				return (actionStack.pop().intValue());
+    			}	
+    		}
+    	}
     } /* end of whereDoIGo() */
 
 
@@ -203,6 +199,52 @@ public class FloodPlayer extends MyPlayer {
 		}
 	}
 
+	public double alphaBetaSearch(Playerstate currentState, double alpha, double beta, int currentDepth, ArrayList<Integer> path) 
+	{
+
+		if(currentState.isGoal() || currentDepth == 0) {
+			return (double)(currentState.utility(this));
+		}
+		
+		//System.out.println(currentDepth);
+		//currentState.printBoard();
+		//System.out.println("\n");
+		
+			ArrayList<Integer> legalMoves = currentState.getShuffledLegalMoves();
+			if( legalMoves.size() == 0)
+				legalMoves.add(d);
+	
+			ArrayList<Playerstate> successors = new ArrayList<Playerstate> () ;
+			ArrayList<Double> scores = new ArrayList<Double>() ;
+			for(int move: legalMoves){
+				successors.add(currentState.getSuccessor(move));
+			}
+		if(currentState.currentPlayer == this){
+			double v = Double.NEGATIVE_INFINITY;
+			for(Playerstate successor: successors){
+				double result = alphaBetaSearch(successor, alpha, beta, currentDepth-1, path);//full re-search
+				scores.add(result);
+				v = Math.max(v, result);
+				if (v >= beta) break;
+				alpha = Math.max(alpha, v);
+			}
+			int idx = scores.indexOf(v);
+			path.add(legalMoves.get(idx));
+			return v;
+		}
+		else{
+			double v = Double.POSITIVE_INFINITY;
+			for(Playerstate successor: successors){
+				double result = alphaBetaSearch(successor, alpha, beta, currentDepth-1, path);//full re-search
+				scores.add(result);
+				v = Math.min(v, result);
+				if (alpha >= v) break;
+				beta= Math.min(beta, v);
+			}
+			return v;
+		}
+	}
+	
 	public void printCause() {
 	}
 

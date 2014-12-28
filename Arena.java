@@ -31,13 +31,15 @@ public class Arena extends Canvas implements Runnable {
     public  MyPlayer         myplayer;
 	public	FloodPlayer		 floodplayer;
 	public  HumanPlayer		 humanplayer;
-	public  MiniMax			 minimax1;
+	public  MiniMaxPlayer	 minimaxplayer;
+	public  MixPlayer		 mixplayer;
     public  GPPlayer         gpplayer2;
     public  NNPlayer         nnplayer2;
     public  MyPlayer         myplayer2;
 	public	FloodPlayer		 floodplayer2;
 	public  HumanPlayer		 humanplayer2;
-	public  MiniMax			 minimax2;
+	public  MiniMaxPlayer	 minimaxplayer2;
+	public  MixPlayer		 mixplayer2;
     public  boolean          board[][];
     public  boolean          clear;
     public  boolean          startAgain = false;
@@ -86,18 +88,20 @@ public class Arena extends Canvas implements Runnable {
 	if ( board == null ) {
 	    board = new boolean[xmax][ymax];
 	}
-	gpplayer = new GPPlayer( "gp",Color.pink,this,xmax,ymax,(byte)1,null );
-	nnplayer = new NNPlayer( "nn",Color.pink,this,xmax,ymax,(byte)1,null );
-	myplayer = new MyPlayer( "my",Color.pink,this,xmax,ymax,(byte)1 );
-	floodplayer = new FloodPlayer( "fl",Color.pink,this,xmax,ymax,(byte)1 );
-	humanplayer = new HumanPlayer( "human",Color.pink,this,xmax,ymax,(byte)1 );
-	minimax1 = new MiniMax( "minimax2",Color.pink,this,xmax,ymax,(byte)1 );
-	gpplayer2 = new GPPlayer( "gp2",Color.cyan,this,xmax,ymax,(byte)2,null );
-	nnplayer2 = new NNPlayer( "nn2",Color.cyan,this,xmax,ymax,(byte)2,null );
-	myplayer2 = new MyPlayer( "my2",Color.cyan,this,xmax,ymax,(byte)2 );
-	floodplayer2 = new FloodPlayer( "fl2",Color.cyan,this,xmax,ymax,(byte)2 );
-	humanplayer2 = new HumanPlayer( "human2",Color.cyan,this,xmax,ymax,(byte)2 );
-	minimax2 = new MiniMax( "minimax2",Color.cyan,this,xmax,ymax,(byte)2 );
+	gpplayer = 		new GPPlayer	( "gp",Color.pink,this,xmax,ymax,(byte)1,null );
+	nnplayer = 		new NNPlayer	( "nn",Color.pink,this,xmax,ymax,(byte)1,null );
+	myplayer = 		new MyPlayer	( "my",Color.pink,this,xmax,ymax,(byte)1 );
+	floodplayer = 	new FloodPlayer	( "fl",Color.pink,this,xmax,ymax,(byte)1 );
+	humanplayer = 	new HumanPlayer	( "human",Color.pink,this,xmax,ymax,(byte)1 );
+	minimaxplayer = new MiniMaxPlayer("minimax2",Color.pink,this,xmax,ymax,(byte)1 );
+	mixplayer = 	new MixPlayer	( "mix1",Color.pink,this,xmax,ymax,(byte)1 );
+	gpplayer2 = 	new GPPlayer	( "gp2",Color.cyan,this,xmax,ymax,(byte)2,null );
+	nnplayer2 = 	new NNPlayer	( "nn2",Color.cyan,this,xmax,ymax,(byte)2,null );
+	myplayer2 = 	new MyPlayer	( "my2",Color.cyan,this,xmax,ymax,(byte)2 );
+	floodplayer2 = 	new FloodPlayer	( "fl2",Color.cyan,this,xmax,ymax,(byte)2 );
+	humanplayer2 = 	new HumanPlayer	( "human2",Color.cyan,this,xmax,ymax,(byte)2 );
+	minimaxplayer2 =new MiniMaxPlayer("minimax2",Color.cyan,this,xmax,ymax,(byte)2 );
+	mixplayer2 = 	new MixPlayer	( "mix2",Color.cyan,this,xmax,ymax,(byte)2 );
 	if ( grayImage != null ) {
 	    this.getGraphics().drawImage( grayImage,0,0,this ); 
 	}
@@ -154,12 +158,20 @@ public class Arena extends Canvas implements Runnable {
 			player1.name = "NN";
 		}
 		else if ( player == Tron.LEVEL1 ) {
-			player1 = minimax1;
+			player1 = myplayer;
 			player1.name = "LEVEL1";
 		}
 		else if ( player == Tron.LEVEL2 ) {
 			player1 = floodplayer;
 			player1.name = "LEVEL2";
+		}
+		else if ( player == Tron.MINMAX ) {
+			player1 = minimaxplayer;
+			player1.name = "MINMAX1";
+		}
+		else if ( player == Tron.MIX ) {
+			player1 = mixplayer;
+			player1.name = "MIX1";
 		}
 		player1.crash = false;
 		clear = true;
@@ -189,14 +201,21 @@ public class Arena extends Canvas implements Runnable {
 			player2.name = "NN2";
 		}
 		else if ( player == Tron.LEVEL1 ) {
-			//player2 = myplayer2;
-			player2 = minimax2;
+			player2 = myplayer2;
 			player2.name = "LEVEL1_2";
 		}
 		else if( player == Tron.LEVEL2 ) {
 			System.out.println("Select Level2");
 			player2 = floodplayer2;
 			player2.name = "LEVEL2_2";
+		}
+		else if ( player == Tron.MINMAX ) {
+			player2 = minimaxplayer2;
+			player2.name = "MINMAX2";
+		}
+		else if ( player == Tron.MIX ) {
+			player2 = mixplayer2;
+			player2.name = "MIX2";
 		}
 		else{
 			player2 = humanplayer2;

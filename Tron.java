@@ -40,6 +40,8 @@ public class Tron extends JFrame {
     public static final int HUMAN 		= 0;
     public static final int LEVEL1    	= 1;
     public static final int LEVEL2    	= 2;
+    public static final int MINMAX    	= 3;
+    public static final int MIX    		= 4;
     public static final int GP    		= -1;
     public static final int NN    		= -2;
     public static int player1;
@@ -86,8 +88,9 @@ public class Tron extends JFrame {
 	c.anchor    = GridBagConstraints.CENTER;
 	
 
-    tron.pickP1Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN"});
-	tron.pickP1Box.setSelectedItem("LEVEL1");
+    tron.pickP1Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN","MINMAX","MIX"});
+	tron.pickP1Box.setSelectedItem("MIX");
+	player1 = MIX;
 	tron.pickP1Box.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent  e) {
         	if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -104,8 +107,11 @@ public class Tron extends JFrame {
 		        else if (playerType.equals("LEVEL2")){
 		        	player1 = LEVEL2;
 		        } 
-		        else {
-		        	player1 = LEVEL1;
+		        else if (playerType.equals("MINMAX")){
+		        	player1 = MINMAX;
+		        } 
+		        else if (playerType.equals("MIX")){
+		        	player1 = MIX;
 		        }
 		        statusLabel.setText( "Player 1 is "+ playerType );
         	}
@@ -121,8 +127,9 @@ public class Tron extends JFrame {
 	layout.setConstraints( tron.pickP1Box,c );
 	tron.add( tron.pickP1Box );
 	
-	tron.pickP2Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN"});
+	tron.pickP2Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN","MINMAX","MIX"});
 	tron.pickP2Box.setSelectedItem("HUMAN");
+	player2 = HUMAN;
 	tron.pickP2Box.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent  e) {
         	if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -139,8 +146,11 @@ public class Tron extends JFrame {
 		        else if (playerType.equals("LEVEL2")){
 		        	player2 = LEVEL2;
 		        } 
-		        else {
-		        	player2 = LEVEL1;
+		        else if (playerType.equals("MINMAX")){
+		        	player2 = MINMAX;
+		        } 
+		        else if (playerType.equals("MIX")){
+		        	player2 = MIX;
 		        }
 		        statusLabel.setText( "Player 2 is "+ playerType );
         	}
