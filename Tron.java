@@ -104,6 +104,9 @@ public class Tron extends JFrame {
 		        else if (playerType.equals("NN")){
 		        	player1 = NN;
 		        } 
+		        else if (playerType.equals("LEVEL1")){
+		        	player1 = LEVEL1;
+		        } 
 		        else if (playerType.equals("LEVEL2")){
 		        	player1 = LEVEL2;
 		        } 
@@ -142,6 +145,9 @@ public class Tron extends JFrame {
 		        } 
 		        else if (playerType.equals("NN")){
 		        	player2 = NN;
+		        } 
+		        else if (playerType.equals("LEVEL1")){
+		        	player2 = LEVEL1;
 		        } 
 		        else if (playerType.equals("LEVEL2")){
 		        	player2 = LEVEL2;
