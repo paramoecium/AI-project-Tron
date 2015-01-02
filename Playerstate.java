@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Queue;
+import java.util.LinkedList;
 import java.awt.Point;
 public class Playerstate {
     public  Player           	player1;
@@ -9,6 +11,8 @@ public class Playerstate {
 	public 	int 				player2_head_X;
 	public 	int 				player2_head_Y;
     public  boolean          	board[][];
+	public  int					floodBoard[][][];
+	public  boolean				enemyReached;
     public  Player				currentPlayer;
     
     private boolean				crashed = false;
@@ -42,6 +46,15 @@ public class Playerstate {
 	
 	public Point getEnemyHead(){
 		if (currentPlayer==player2){
+			return new Point(player1_head_X, player1_head_Y);
+		}
+		else{
+			return new Point(player2_head_X, player2_head_Y);
+		}
+	}
+
+	public Point getSelfHead(){
+		if (currentPlayer==player1){
 			return new Point(player1_head_X, player1_head_Y);
 		}
 		else{
@@ -273,6 +286,30 @@ public class Playerstate {
 			else return -inverse_norm()-manhattan();		
 		}
 	}
+
+	public int evaluation(Player p){
+		floodFill();
+		if(enemyReached == true){
+			int area0 = 0;
+			int area1 = 1;
+			for(int i = 0; i < board.length; i++){
+				for(int j = 0; j < board[i].length; j++){
+					if( floodBoard[i][j][0] < floodBoard[i][j][1])
+						area0 += 1;
+					else if( floodBoard[i][j][0] > floodBoard[i][j][1])
+						area1 += 1;
+				}
+			}
+			if(currentPlayer == p)
+				return area0-area1;
+			else
+				return area1-area0;
+		}
+		else{
+			return 0;
+		}
+	}
+
 	/*return number of walls*/
 	public int norm(){
 		int n = 0;
@@ -292,5 +329,100 @@ public class Playerstate {
 			}
 		}
 		return n;
+	}
+
+	public void floodFill(){
+		int x_max = currentPlayer.x_max;
+		int y_max = currentPlayer.y_max;
+		int x_self = getSelfHead().x;
+		int y_self = getSelfHead().y;
+		floodBoard = new int[board.length][][];
+		for(int i = 0; i < board.length; i++){
+			floodBoard[i] = new int[board[i].length][2];
+		}
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < board[i].length; j++){
+				floodBoard[i][j][0] = Integer.MAX_VALUE;
+				floodBoard[i][j][1] = Integer.MAX_VALUE;
+			}
+		}
+		Node selfNode = new Node(x_self, y_self, 0);
+		Node enemyNode = new Node(getEnemyHead(), 0);
+
+		Queue<Node> queue = new LinkedList<Node>();
+		queue.offer(selfNode);
+
+		Node tempNode;
+		int tempx, tempy, tempd;
+	    while((tempNode = queue.poll())!=null){
+			tempx = tempNode.point.x;
+			tempy = tempNode.point.y;
+			tempd = tempNode.depth;
+			if( (board[tempx][tempy] == true && tempd != 0 ) || floodBoard[tempx][tempy][0] <= tempd)
+				continue;
+			floodBoard[tempx][tempy][0] = tempd;
+			Node up = new Node(tempx, (tempy-1+y_max)%y_max, tempd+1);
+			Node down = new Node(tempx, (tempy+1+y_max)%y_max, tempd+1);
+			Node left = new Node((tempx-1+x_max)%x_max, tempy, tempd+1);
+			Node right = new Node((tempx+1+x_max)%x_max, tempy, tempd+1);
+			queue.offer(up);
+			queue.offer(down);
+			queue.offer(left);
+			queue.offer(right);
+		}
+
+		queue.clear();
+		queue.offer(enemyNode);
+		while((tempNode = queue.poll())!=null){
+			tempx = tempNode.point.x;
+			tempy = tempNode.point.y;
+			tempd = tempNode.depth;
+			if( (board[tempx][tempy] == true && tempd != 0 ) || floodBoard[tempx][tempy][1] <= tempd)
+				continue;
+			floodBoard[tempx][tempy][1] = tempd;
+			Node up = new Node(tempx, (tempy-1+y_max)%y_max, tempd+1);
+			Node down = new Node(tempx, (tempy+1+y_max)%y_max, tempd+1);
+			Node left = new Node((tempx-1+x_max)%x_max, tempy, tempd+1);
+			Node right = new Node((tempx+1+x_max)%x_max, tempy, tempd+1);
+			queue.offer(up);
+			queue.offer(down);
+			queue.offer(left);
+			queue.offer(right);
+		}
+
+		tempx = getEnemyHead().x; 
+		tempy = getEnemyHead().y;
+		tempd = floodBoard[tempx][tempy][0];
+		enemyReached = true;
+		try{
+			while(tempx != x_self || tempy != y_self){
+				if(floodBoard[(tempx - 1 + x_max) % x_max][tempy][0] < tempd){
+			//		actionStack.push(new Integer(Player.EAST));
+					tempx = (tempx - 1 + x_max) % x_max;
+				}
+				else if(floodBoard[(tempx + 1 + x_max) % x_max][tempy][0] < tempd){
+			//		actionStack.push(new Integer(Player.WEST));
+					tempx = (tempx + 1 + x_max) % x_max;
+				}
+				else if(floodBoard[tempx][(tempy - 1 + y_max) % y_max][0] < tempd){
+			//		actionStack.push(new Integer(Player.SOUTH));
+					tempy = (tempy - 1 + y_max) % y_max;
+				}
+				else if(floodBoard[tempx][(tempy + 1 + y_max) % y_max][0] < tempd){
+			//		actionStack.push(new Integer(Player.NORTH));
+					tempy = (tempy + 1 + y_max) % y_max;
+				}
+				else{
+					//System.err.println("Doesn't find the action list!");
+					enemyReached = false;
+					break;
+				}
+				tempd = floodBoard[tempx][tempy][0];
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace(System.out);
+			System.exit(2);
+		}
 	}
 }

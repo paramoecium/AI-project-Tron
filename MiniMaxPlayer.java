@@ -112,7 +112,8 @@ public class MiniMaxPlayer extends MyPlayer {
 	{
 
 		if(currentState.isGoal() || currentDepth == 0) {
-			return (double)(currentState.utility(this));
+			//return (double)(currentState.utility(this));
+			return (double)(currentState.evaluation(this));
 		}
 		
 		//System.out.println(currentDepth);
