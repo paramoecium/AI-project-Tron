@@ -87,7 +87,7 @@ public class Arena extends Canvas implements Runnable {
     public void start() {
 	if ( board == null ) {
 	    board = new boolean[xmax][ymax];
-	}
+//	}
 	gpplayer = 		new GPPlayer	( "gp",Color.pink,this,xmax,ymax,(byte)1,null );
 	nnplayer = 		new NNPlayer	( "nn",Color.pink,this,xmax,ymax,(byte)1,null );
 	myplayer = 		new MyPlayer	( "my",Color.pink,this,xmax,ymax,(byte)1 );
@@ -102,6 +102,7 @@ public class Arena extends Canvas implements Runnable {
 	humanplayer2 = 	new HumanPlayer	( "human2",Color.cyan,this,xmax,ymax,(byte)2 );
 	minimaxplayer2 =new MiniMaxPlayer("minimax2",Color.cyan,this,xmax,ymax,(byte)2 );
 	mixplayer2 = 	new MixPlayer	( "mix2",Color.cyan,this,xmax,ymax,(byte)2 );
+	}
 	if ( grayImage != null ) {
 	    this.getGraphics().drawImage( grayImage,0,0,this ); 
 	}
@@ -189,7 +190,6 @@ public class Arena extends Canvas implements Runnable {
      */
     public void selectPlayer2( int player)
 	{
-		System.out.println(player);
 		if ( player == Tron.GP ) {
 			gpplayer2.getStrategy("gp.2220000");
 			player2 = gpplayer2;
@@ -205,7 +205,6 @@ public class Arena extends Canvas implements Runnable {
 			player2.name = "LEVEL1_2";
 		}
 		else if( player == Tron.LEVEL2 ) {
-			System.out.println("Select Level2");
 			player2 = floodplayer2;
 			player2.name = "LEVEL2_2";
 		}
@@ -236,12 +235,13 @@ public class Arena extends Canvas implements Runnable {
      *
      */
     public void startPlayers() {
-	clearBoard();
-	player1.go( xmax/4, ymax/2, Player.EAST);
-	player2.go( 3*xmax/4,ymax/2, Player.WEST);
-	player1.score = tron.robotScore;
-	state = RUNNING;
-	lastmove = 0;
+		clearBoard();
+		player1.go( xmax/4, ymax/2, Player.EAST);
+		player2.go( 3*xmax/4,ymax/2, Player.WEST);
+		player1.score = tron.robotScore;
+		player2.score = tron.humanScore;
+		state = RUNNING;
+		lastmove = 0;
     } /* end of startPlayers() */
     
 
@@ -254,48 +254,57 @@ public class Arena extends Canvas implements Runnable {
      *
      */
     public void run() {
-	while ( true ) {
-	    switch ( state ) {
-	    case RUNNING:
-		player1.step();
-		player2.step();
-		break;
-	    case RESTARTING:
-		if ( player1.crash && player2.crash ) {
-		    // tie
+		while ( true ) {
+		    switch ( state ) {
+			    case RUNNING:
+					player1.step();
+					player2.step();
+					break;
+			    case RESTARTING:
+					if ( player1.crash && player2.crash ) {
+					    // tie
+					}
+					else if ( player1.crash ) {
+					    // player1 crashes -> player2 wins -> result="L"
+					    player2.tallyWin();
+					}
+					else if ( player2.crash ) {
+					    // player2 crashes -> player1 wins -> result="W"
+					    player1.tallyWin();
+					}
+					player1.restart( player2.crash );
+					player2.restart( player1.crash );
+					state = WAITING;
+					tron.updateScore();
+					if(tron.textMode){
+						tron.numOfTraining -= 1;
+						if(tron.numOfTraining != 0)
+							startAgain = true;
+						else{
+							tron.textMode = false;
+							Tron.enableDisplay(tron);
+						}
+					}
+					break;
+			    case WAITING:
+					if ( startAgain ) {
+					    startAgain = false;
+					    start();
+					    startPlayers();
+					}
+					break;
+			}
+			repaint();
+		    try { 
+				Thread.sleep( GAMESPEED );
+			}
+			catch ( InterruptedException e ) {
+			}
+			if ( (player1 != null)&&(player2 != null) ) { // hack hack
+				player1.newPos();
+				player2.newPos();
+			}
 		}
-		else if ( player1.crash ) {
-		    // player1 crashes -> player2 wins -> result="L"
-		    player2.tallyWin();
-		}
-		else if ( player2.crash ) {
-		    // player2 crashes -> player1 wins -> result="W"
-		    player1.tallyWin();
-		}
-		player1.restart( player2.crash );
-		player2.restart( player1.crash );
-		state = WAITING;
-		tron.updateScore();
-		break;
-	    case WAITING:
-		if ( startAgain ) {
-		    startAgain = false;
-		    start();
-		    startPlayers();
-		}
-		break;
-	    }
-	    repaint();
-	    try { 
-		Thread.sleep( GAMESPEED );
-	    }
-	    catch ( InterruptedException e ) {
-	    }
-	    if ( (player1 != null)&&(player2 != null) ) { // hack hack
-	    	player1.newPos();
-			player2.newPos();
-	    }
-	}
     } /* end of run() */
     
     

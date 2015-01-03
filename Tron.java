@@ -46,6 +46,8 @@ public class Tron extends JFrame {
     public static final int NN    		= -2;
     public static int player1;
     public static int player2;
+	public static boolean textMode      = false;
+	public static int numOfTraining			= 0;
 
 	public static KeyDemo myKeyDemo;
     
@@ -131,8 +133,8 @@ public class Tron extends JFrame {
 	tron.add( tron.pickP1Box );
 	
 	tron.pickP2Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN","MINMAX","MIX"});
-	tron.pickP2Box.setSelectedItem("HUMAN");
-	player2 = HUMAN;
+	tron.pickP2Box.setSelectedItem("LEVEL2");
+	player2 = LEVEL2;
 	tron.pickP2Box.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent  e) {
         	if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -228,9 +230,20 @@ public class Tron extends JFrame {
 		public void keyTyped(KeyEvent e) {}
 	});
 
-    tron.pack();
-	tron.setVisible(true);
-	tron.setFocusable(true);
+	if(args.length != 0){
+		for(String s: args){
+			System.out.println("Run in textMode" + s + "times");
+			numOfTraining = Integer.parseInt(s);
+		}
+
+		textMode = true;
+		arena.startAgain = true;
+	}
+
+	if(textMode == false){
+		enableDisplay(tron);
+	}
+
 	Tron.arena.start();
 
 	arena.selectPlayer1( player1 );
@@ -245,10 +258,10 @@ public class Tron extends JFrame {
      *
      */
     public void updateScore() {
-	robotScore = arena.player1.score;
-	humanScore = arena.player2.score;
-	statusLabel.setText( "robot: [" + robotScore + "]  "+
-			     "human: [" + humanScore + "]" );
+		robotScore = arena.player1.score;
+		humanScore = arena.player2.score;
+		statusLabel.setText( "robot: [" + robotScore + "]  "+  "human: [" + humanScore + "]" );
+		System.out.println(  "robot: [" + robotScore + "]  "+  "human: [" + humanScore + "]" ) ;
     } /* end of updateScore() */
 
 
@@ -258,7 +271,7 @@ public class Tron extends JFrame {
      *
      */
     public void start() {
-	arena.start();
+		arena.start();
     } /* end of start() */
 
     
@@ -268,7 +281,7 @@ public class Tron extends JFrame {
      *
      */
     public void stop() {
-	arena.stop();
+		arena.stop();
     } /* end of stop() */ 
 
     
@@ -281,7 +294,11 @@ public class Tron extends JFrame {
     } /* end of destroy() */
 
     
-    
+	public static void enableDisplay(Tron tron){
+		tron.pack();
+		tron.setVisible(true);
+		tron.setFocusable(true);
+	}    
     /**
      * handleEvent()
      *

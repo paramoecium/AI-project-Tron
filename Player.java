@@ -163,9 +163,10 @@ public class Player {
      *
      */
     public void newPos() {
-	x0 = x1;
-	y0 = y1;
-	paint( arena.getGraphics() );
+		x0 = x1;
+		y0 = y1;
+		if(Tron.textMode != true)
+			paint( arena.getGraphics() );
     } /* end of newPos() */   
 
 
