@@ -66,8 +66,8 @@ public class Tron extends JFrame {
 	tron.robotScore = 0;
 	tron.humanScore = 0;
 	
-	int board_X_max = 80;
-	int board_Y_max = 80;
+	int board_X_max = 10;
+	int board_Y_max = 10;
 	int pixelSize = 7;//Player.linewidth
 	Tron.arena = new Arena( tron, board_X_max, board_Y_max, pixelSize);
 	Tron.arena.setSize( pixelSize*board_X_max, pixelSize*board_Y_max );

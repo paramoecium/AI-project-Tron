@@ -289,24 +289,27 @@ public class Playerstate {
 
 	public int evaluation(Player p){
 		floodFill();
-		if(enemyReached == true){
-			int area0 = 0;
-			int area1 = 1;
-			for(int i = 0; i < board.length; i++){
-				for(int j = 0; j < board[i].length; j++){
-					if( floodBoard[i][j][0] < floodBoard[i][j][1])
-						area0 += 1;
-					else if( floodBoard[i][j][0] > floodBoard[i][j][1])
-						area1 += 1;
-				}
+		int area0 = 0;
+		int area1 = 1;
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < board[i].length; j++){
+				if( floodBoard[i][j][0] < floodBoard[i][j][1])
+					area0 += 1;
+				else if( floodBoard[i][j][0] > floodBoard[i][j][1])
+					area1 += 1;
 			}
+		}
+		if(enemyReached == true){
 			if(currentPlayer == p)
 				return area0-area1;
 			else
 				return area1-area0;
 		}
 		else{
-			return 0;
+			if(currentPlayer == p)
+				return area0;
+			else
+				return area1;
 		}
 	}
 
