@@ -19,6 +19,8 @@ public class LearningPlayer extends Player {
 
     public Random random;
 	private ArrayList<Double> theta;
+	private float gamma;
+	private alpha;
 
 
     /**
@@ -34,6 +36,8 @@ public class LearningPlayer extends Player {
 		x_max = x;
 		y_max = y;
 		player_no = number;
+		gamma = 0.1;
+		alpha = 0.1;
 		random = new Random();
 		theta = new ArrayList<Double>();
 
@@ -69,13 +73,51 @@ public class LearningPlayer extends Player {
 		// move randomly
 		//return( Math.abs( random.nextInt() % 4 ));
 		// "tit for tat" player (copy human)
-		return( arena.player2.d );
+		Playerstate currentState = getCurrentState();
+		ArrayList<Integer> legalMoves = currentState.getLegalMoves();
+		int bestAction = 0;
+		int maxQValue = 0;
+		int temp;
+		for(int action: legalMoves){
+			temp = evaluateQ(currentState, action);
+			if(temp > maxQValue){
+				maxQValue = temp;
+				bestAvtion = action;
+			}
+		}
+		return( bestAction );
     } /* end of whereDoIGo() */
 
 	private void update(Playerstate currentState, int action, Playerstate nextState, int reward){
+		ArrayList<Double> features = getFeature(currentState, action);
+		double correlation = reward + gamma*getValue(nextState) - evaluateQ(currentState, action);
+		for(double featureWeight: theta){
+			int idx = theta.indexOf(featureWeight);
+			theta.set(idx, featureWeight + features.get(idx)*alpha*correlation );
+		}
+	}
+
+	private double getValue(Playerstate ps){
+		ArrayList<Integer> legalMoves = ps.getLegalMoves();
+		int maxQValue = 0;
+		int temp;
+		for(int action: legalMoves){
+			temp = evaluateQ(currentState, action);
+			if(temp > maxQValue){
+				maxQValue = temp;
+			}
+		}
+		return maxQValue;
 	}
 
 	private double evaluateQ(Playerstate ps, int action){
+		double sum = 0.0;
+		ArrayList<Double> features = getFeature(ps, action);
+		for(double featureWeight: theta){
+			int idx = theta.indexOf(featureWeight);
+			sum +=  featureWeight* features.get(idx);
+		}
+		return sum;
 	}
 
 	private ArrayList<Double> getFeature(Playerstate currentState, int action){
