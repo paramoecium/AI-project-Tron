@@ -146,6 +146,15 @@ public class Playerstate {
                 moves.add(i);
             }
         }
+        
+        for(int i=0;i<moves.size();i++){
+        	if(moves.get(i)==currentPlayer.d){
+        		int temp = moves.get(0);
+        		moves.set(0, currentPlayer.d);
+        		moves.set(i, temp);
+        		break;
+        	}
+        }
         return new ArrayList<Integer>( moves );
     }
 	
@@ -267,8 +276,86 @@ public class Playerstate {
 		return false;
 	}
 	
+	public int getRight(int curretnDirection){
+		int rightHandside;
+		switch ( curretnDirection ) {
+			case Player.NORTH:
+				rightHandside = Player.EAST;
+	            break;
+	        case Player.SOUTH:
+				rightHandside = Player.WEST;
+	            break;
+	        case Player.WEST:
+				rightHandside = Player.NORTH;
+	            break;
+	        case Player.EAST:
+				rightHandside = Player.SOUTH;
+	            break;
+			default:
+			    System.out.println( "UH-OH!" );
+				rightHandside = curretnDirection;
+			    break;
+		}
+		return rightHandside;
+	}
+	
+	public int getLeft(int curretnDirection){
+		int leftHandside;
+		switch ( curretnDirection ) {
+			case Player.NORTH:
+				leftHandside = Player.WEST;
+	            break;
+	        case Player.SOUTH:
+	        	leftHandside = Player.EAST;
+	            break;
+	        case Player.WEST:
+	        	leftHandside = Player.SOUTH;
+	            break;
+	        case Player.EAST:
+	        	leftHandside = Player.NORTH;
+	            break;
+			default:
+			    System.out.println( "UH-OH!" );
+			    leftHandside = curretnDirection;
+			    break;
+		}
+		return leftHandside;
+	}
+	
 	public boolean isWall(int X, int Y){
 		return board[X][Y];
+	}
+	
+	public boolean isWall(int X, int Y, int direction){
+		switch ( direction ) {
+			case Player.NORTH:
+				return board[X][(Y-1+currentPlayer.y_max)%currentPlayer.y_max];
+	        case Player.SOUTH:
+	    		return board[X][(Y+1+currentPlayer.y_max)%currentPlayer.y_max];
+	        case Player.WEST:
+	    		return board[(X-1+currentPlayer.x_max)%currentPlayer.x_max][Y];
+	        case Player.EAST:
+	    		return board[(X+1+currentPlayer.x_max)%currentPlayer.x_max][Y];
+			default:
+			    System.out.println( "UH-OH!" );
+				return board[X][Y];
+		}
+	}
+	
+	public Point lastPosition(int X, int Y, int direction){
+		switch ( direction ) {
+			case Player.SOUTH:
+				return new Point(X,(Y-1+currentPlayer.y_max)%currentPlayer.y_max);
+	        case Player.NORTH:
+	    		return new Point(X,(Y+1+currentPlayer.y_max)%currentPlayer.y_max);
+	        case Player.EAST:
+	    		return new Point((X-1+currentPlayer.x_max)%currentPlayer.x_max,Y);
+	        case Player.WEST:
+	    		return new Point((X+1+currentPlayer.x_max)%currentPlayer.x_max,Y);
+			default:
+			    System.out.println( "UH-OH!" );
+	    		return new Point(X,Y);
+		}
 	}
 	
 	public boolean isGoal(){
