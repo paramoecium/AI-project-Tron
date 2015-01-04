@@ -18,10 +18,12 @@ public class LearningPlayer extends Player {
 
     public Random random;
 	private ArrayList<Double> theta;
+	//private ArrayList<Double> bestTheta;
 	private double gamma;
 	private double alpha;
 	private int livingAward;
 	private int featureNum = 6;
+	private int totalAward;
 
 
 
@@ -38,9 +40,10 @@ public class LearningPlayer extends Player {
 		x_max = x;
 		y_max = y;
 		player_no = number;
-		gamma = 0.1;
-		alpha = 0.1;
-		livingAward = 20;
+		gamma = 0.05;
+		alpha = 0.01;
+		livingAward = 40;
+		totalAward = 0;
 		random = new Random();
 		theta = new ArrayList<Double>(Collections.nCopies(featureNum, 0.0));
     } /* end of MyPlayer constructor */
@@ -154,26 +157,42 @@ public class LearningPlayer extends Player {
 			}
 			old_d = d;
 		}
-		int reward = livingAward;
 		crash = markBoard( d );
+		if ( crash ) {
+			printCause();
+			arena.state = Arena.RESTARTING;
+			return;
+		}
+		int reward = livingAward;
 		if(Tron.learning == true){
 			Playerstate ps = getCurrentState();
 			update(ps, d, ps.getSuccessor(d), reward);
 			livingAward*=0.9;
-			if (Tron.numOfTraining<=0) Tron.learning=false;
-		}
-		if ( crash ) {
-			if(Tron.learning) {
-				System.out.println("numOfTraining:"+Tron.numOfTraining);
-				System.out.print(theta);
-			}
-			reward = -100;
-			printCause();
-			livingAward = 40;
-			arena.state = Arena.RESTARTING;
-		}
-				
+		}		
     } /* end of step() */
 
+	/**
+     * restart()
+     *
+     */
+    public void restart( boolean theOtherGuyCrashed ) {
+	// default restart method is empty
+		if(Tron.learning) {
 
+			if (Tron.numOfTraining <= 0) 
+				Tron.learning = false;
+
+			int reward = livingAward;
+			if(theOtherGuyCrashed)
+				reward = 300;
+			else
+				reward = -500;
+			Playerstate ps = getCurrentState();
+			update(ps, d, ps.getSuccessor(d), reward);
+			System.out.println("numOfTraining:"+Tron.numOfTraining);
+			System.out.print(theta);
+		}
+		livingAward = 40;
+		totalAward = 0;
+    } // end of restart()
 }

@@ -48,7 +48,7 @@ public class Tron extends JFrame {
     public static int player1;
     public static int player2;
 	public static boolean textMode      = false;
-	public static boolean learning      = true;
+	public static boolean learning      = false;
 	public static int numOfTraining			= 100;
 
 	public static KeyDemo myKeyDemo;
@@ -93,8 +93,8 @@ public class Tron extends JFrame {
 	
 
     tron.pickP1Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN","MINMAX","MIX"});
-	tron.pickP1Box.setSelectedItem("MIX");
-	player1 = MIX;
+	tron.pickP1Box.setSelectedItem("MINMAX");
+	player1 = MINMAX;
 	tron.pickP1Box.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent  e) {
         	if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -240,8 +240,8 @@ public class Tron extends JFrame {
 			System.out.println("Run in textMode" + s + "times");
 			numOfTraining = Integer.parseInt(s);
 		}
-
-		textMode = true;
+		learning = true;
+		//textMode = true;
 		arena.startAgain = true;
 	}
 
