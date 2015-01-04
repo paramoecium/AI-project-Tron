@@ -65,9 +65,9 @@ public class MyPlayer extends Player {
 	// "tit for tat" player (copy human)
 	//return( arena.player2.d );
     	int next_d = d;
-    	//next_d = alongWall(x1, y1, d);
+    	next_d = alongWall(x1, y1, d);
     	int next_d_avoidCollision = avoidCollision(x1, y1, d);
-		if(next_d_avoidCollision != d) next_d = next_d_avoidCollision;
+		//if(next_d_avoidCollision != d) next_d = next_d_avoidCollision;
 		return next_d;
 
     } /* end of whereDoIGo() */
@@ -132,16 +132,63 @@ public class MyPlayer extends Player {
 	public int alongWall(int currentx, int currenty, int currentDirection) {
 		Playerstate p = this.getCurrentState();
 		ArrayList<Integer> legalMoves =  p.getLegalMoves();
+		int nextMove = -1;
 //		if((random.nextInt() % 8)==0){
 //			legalMoves =  p.getShuffledLegalMoves();
 //		}
-		for(int legal_d : legalMoves){
-			if(legal_d == currentDirection) continue;
-			if((p.narrowAlley(legal_d) != true)&&(p.narrowAlley( (legal_d+2)%4 ) == true)) break;
+		Point lastXY = p.lastPosition(currentx, currenty, currentDirection);
+		if (legalMoves.size()>1){
+			boolean currentDirectionIsSafe = false;
+			for(int i=0;i<legalMoves.size();i++){
+				if ( p.isWall(currentx, currenty, legalMoves.get(i)) ||
+				     (p.narrowAlley(legalMoves.get(i)) == true) ){
+					legalMoves.remove(i);
+				}
+				else if(legalMoves.get(i)==currentDirection){
+					currentDirectionIsSafe = true;
+					if(currentDirectionIsSafe) nextMove = currentDirection;
+					else nextMove = legalMoves.get(i);
+				}
+			}
+			//System.out.println(legalMoves);
+			for(int i=0;i<legalMoves.size();i++){
+				if(legalMoves.get(i)==currentDirection){
+					if ( p.isWall( currentx, currenty, p.getRight(currentDirection) )){
+						nextMove = legalMoves.get(i);
+						break;
+					}
+					else if ( p.isWall( currentx, currenty, p.getLeft(currentDirection) )){
+						nextMove = legalMoves.get(i);
+						break;
+					}
+				}
+				else{
+					if(legalMoves.get(i)==p.getRight(currentDirection)){
+						if( p.isWall( (int)lastXY.getX(), (int)lastXY.getY(), p.getRight(currentDirection) )){
+							nextMove = legalMoves.get(i);
+							break;
+						}
+					}
+					else if(legalMoves.get(i)==p.getLeft(currentDirection)){
+	
+						if( p.isWall( (int)lastXY.getX(), (int)lastXY.getY(), p.getLeft(currentDirection) )){
+						   	nextMove = legalMoves.get(i);
+							break;
+						}
+					}
+				}
+				nextMove = legalMoves.get(0);
+			}
 		}
+		else if (legalMoves.size()==1){
+			nextMove = legalMoves.get(0);
+		}
+		else if (legalMoves.size()==0){
+			nextMove = currentDirection;
+		}
+		if(nextMove==-1)System.out.println("error");
+		return nextMove;
 		
-
-		return legalMoves.get(0);
 	}
 	
 	public void printCause() {
