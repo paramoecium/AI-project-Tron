@@ -276,6 +276,22 @@ public class Playerstate {
 		return false;
 	}
 	
+	public Point getPosition(Point p, int direction){
+		switch ( direction ) {
+			case Player.NORTH:
+				return new Point(p.x,(p.y-1+currentPlayer.y_max)%currentPlayer.y_max);
+		    case Player.SOUTH:
+				return new Point(p.x,(p.y+1+currentPlayer.y_max)%currentPlayer.y_max);
+		    case Player.WEST:
+				return new Point((p.x-1+currentPlayer.x_max)%currentPlayer.x_max,p.y);
+		    case Player.EAST:
+				return new Point((p.x+1+currentPlayer.x_max)%currentPlayer.x_max,p.y);
+			default:
+			    System.out.println( "UH-OH!" );
+				return new Point(p.x,p.y);
+		}
+	}
+	
 	public int getRight(int curretnDirection){
 		int rightHandside;
 		switch ( curretnDirection ) {
@@ -375,7 +391,7 @@ public class Playerstate {
 	}
 
 	public int evaluation(Player p){
-		floodFill();
+		if(!hasFlood) floodFill();
 		int area0 = 0;
 		int area1 = 1;
 		for(int i = 0; i < board.length; i++){
@@ -420,8 +436,10 @@ public class Playerstate {
 		}
 		return n;
 	}
-
+	
+	public boolean hasFlood = false;
 	public void floodFill(){
+		hasFlood = true;
 		int x_max = currentPlayer.x_max;
 		int y_max = currentPlayer.y_max;
 		int x_self = getSelfHead().x;
@@ -515,4 +533,52 @@ public class Playerstate {
 			System.exit(2);
 		}
 	}
+	
+	
+	/*help functions for Q learning*/
+	public int leftAntenna(){
+		int distance = 0;
+		int currentDirection = currentPlayer.d;
+		Point farthest = getSelfHead();
+		farthest = getPosition(farthest, currentDirection);
+		boolean reachWall = isWall(farthest.x, farthest.y);
+		while (!reachWall){
+			farthest = getPosition(farthest, getLeft(currentDirection));
+			farthest = getPosition(farthest, currentDirection);
+			reachWall = isWall(farthest.x, farthest.y);
+			distance++;
+			if(distance>9) break;
+		}
+		return distance;
+	}
+	public int rightAntenna(){
+		int distance = 0;
+		int currentDirection = currentPlayer.d;
+		Point farthest = getSelfHead();
+		farthest = getPosition(farthest, currentDirection);
+		boolean reachWall = isWall(farthest.x, farthest.y);
+		while (!reachWall){
+			farthest = getPosition(farthest, getRight(currentDirection));
+			farthest = getPosition(farthest, currentDirection);
+			reachWall = isWall(farthest.x, farthest.y);
+			distance++;
+			if(distance>9) break;
+		}
+		return distance;
+	}
+	public int frontAntenna(){
+		int distance = 0;
+		int currentDirection = currentPlayer.d;
+		Point farthest = getSelfHead();
+		farthest = getPosition(farthest, currentDirection);
+		boolean reachWall = isWall(farthest.x, farthest.y);
+		while (!reachWall){
+			farthest = getPosition(farthest, currentDirection);
+			reachWall = isWall(farthest.x, farthest.y);
+			distance++;
+			if(distance>9) break;
+		}
+		return distance;
+	}
+
 }

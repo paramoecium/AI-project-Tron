@@ -42,12 +42,14 @@ public class Tron extends JFrame {
     public static final int LEVEL2    	= 2;
     public static final int MINMAX    	= 3;
     public static final int MIX    		= 4;
+    public static final int Learn    	= 5;
     public static final int GP    		= -1;
     public static final int NN    		= -2;
     public static int player1;
     public static int player2;
 	public static boolean textMode      = false;
-	public static int numOfTraining			= 0;
+	public static boolean learning      = true;
+	public static int numOfTraining			= 100;
 
 	public static KeyDemo myKeyDemo;
     
@@ -132,9 +134,9 @@ public class Tron extends JFrame {
 	layout.setConstraints( tron.pickP1Box,c );
 	tron.add( tron.pickP1Box );
 	
-	tron.pickP2Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN","MINMAX","MIX"});
-	tron.pickP2Box.setSelectedItem("MINMAX");
-	player2 = MINMAX;
+	tron.pickP2Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN","MINMAX","MIX","Qlearning"});
+	tron.pickP2Box.setSelectedItem("Qlearning");
+	player2 = Learn;
 	tron.pickP2Box.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent  e) {
         	if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -159,6 +161,9 @@ public class Tron extends JFrame {
 		        } 
 		        else if (playerType.equals("MIX")){
 		        	player2 = MIX;
+		        }
+		        else if (playerType.equals("Qlearning")){
+		        	player2 = Learn;
 		        }
 		        statusLabel.setText( "Player 2 is "+ playerType );
         	}

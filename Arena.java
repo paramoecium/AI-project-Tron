@@ -40,6 +40,7 @@ public class Arena extends Canvas implements Runnable {
 	public  HumanPlayer		 humanplayer2;
 	public  MiniMaxPlayer	 minimaxplayer2;
 	public  MixPlayer		 mixplayer2;
+	public	LearningPlayer	 lnPlayer2;
     public  boolean          board[][];
     public  boolean          clear;
     public  boolean          startAgain = false;
@@ -102,6 +103,7 @@ public class Arena extends Canvas implements Runnable {
 	humanplayer2 = 	new HumanPlayer	( "human2",Color.cyan,this,xmax,ymax,(byte)2 );
 	minimaxplayer2 =new MiniMaxPlayer("minimax2",Color.cyan,this,xmax,ymax,(byte)2 );
 	mixplayer2 = 	new MixPlayer	( "mix2",Color.cyan,this,xmax,ymax,(byte)2 );
+	lnPlayer2 = 	new LearningPlayer( "ln2",Color.cyan,this,xmax,ymax,(byte)2 );
 	}
 	if ( grayImage != null ) {
 	    this.getGraphics().drawImage( grayImage,0,0,this ); 
@@ -216,6 +218,10 @@ public class Arena extends Canvas implements Runnable {
 			player2 = mixplayer2;
 			player2.name = "MIX2";
 		}
+		else if ( player == Tron.Learn ) {
+			player2 = lnPlayer2;
+			player2.name = "ln2";
+		}
 		else{
 			player2 = humanplayer2;
 		}
@@ -276,12 +282,12 @@ public class Arena extends Canvas implements Runnable {
 					player2.restart( player1.crash );
 					state = WAITING;
 					tron.updateScore();
-					if(tron.textMode){
-						tron.numOfTraining -= 1;
-						if(tron.numOfTraining != 0)
+					if(Tron.learning){
+						Tron.numOfTraining -= 1;
+						if(Tron.numOfTraining != 0)
 							startAgain = true;
 						else{
-							tron.textMode = false;
+							Tron.textMode = false;
 							Tron.enableDisplay(tron);
 						}
 					}

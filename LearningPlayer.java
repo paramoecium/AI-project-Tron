@@ -9,7 +9,6 @@
  */
 
 import java.awt.*;
-import java.util.Random;
 import java.util.*;
 
 
@@ -21,9 +20,8 @@ public class LearningPlayer extends Player {
 	private ArrayList<Double> theta;
 	private double gamma;
 	private double alpha;
-	private int numOfTraining;
-	private boolean learning;
 	private int livingAward;
+	private int featureNum = 6;
 
 
 
@@ -42,15 +40,9 @@ public class LearningPlayer extends Player {
 		player_no = number;
 		gamma = 0.1;
 		alpha = 0.1;
-		numOfTraining = 10;
 		livingAward = 20;
 		random = new Random();
-		theta = new ArrayList<Double>();
-
-		ArrayList<Double> initFeature = getFeature(getCurrentState(), d);
-		for(int i = 0; i < initFeature.size(); i++){
-			theta.add(0.0);
-		}
+		theta = new ArrayList<Double>(Collections.nCopies(featureNum, 0.0));
     } /* end of MyPlayer constructor */
 
 
@@ -97,9 +89,15 @@ public class LearningPlayer extends Player {
 	private void update(Playerstate currentState, int action, Playerstate nextState, int reward){
 		ArrayList<Double> features = getFeature(currentState, action);
 		double correlation = reward + gamma*getValue(nextState) - evaluateQ(currentState, action);
+		//System.out.println(correlation);
+		double sum=0;
 		for(double featureWeight: theta){
 			int idx = theta.indexOf(featureWeight);
 			theta.set(idx, featureWeight + features.get(idx)*alpha*correlation );
+			sum+=theta.get(idx);
+		}
+		for(int i=0;i<theta.size();i++){
+			theta.set(i, theta.get(i)/sum);
 		}
 	}
 
@@ -121,7 +119,7 @@ public class LearningPlayer extends Player {
 		ArrayList<Double> features = getFeature(ps, action);
 		for(double featureWeight: theta){
 			int idx = theta.indexOf(featureWeight);
-			sum +=  featureWeight* features.get(idx);
+			sum +=  featureWeight*features.get(idx);
 		}
 		return sum;
 	}
@@ -129,6 +127,13 @@ public class LearningPlayer extends Player {
 	private ArrayList<Double> getFeature(Playerstate ps, int action){
 		ArrayList<Double> features = new ArrayList<Double>();
 		features.add( (double)ps.manhattan() );
+		features.add( (double)ps.evaluation(this) );
+		features.add( (double)ps.frontAntenna() );
+		features.add( (double)ps.leftAntenna() );
+		features.add( (double)ps.rightAntenna() );
+		features.add( (double)ps.norm() );
+		//System.out.println("features:"+features);
+		if (features.size()>featureNum) System.err.print("error");
 		if(ps.player1 == this){
 			
 		}
@@ -151,19 +156,21 @@ public class LearningPlayer extends Player {
 		}
 		int reward = livingAward;
 		crash = markBoard( d );
-		if(learning == true){
-			if (crash )
-				reward = -500;
+		if(Tron.learning == true){
 			Playerstate ps = getCurrentState();
 			update(ps, d, ps.getSuccessor(d), reward);
 			livingAward*=0.9;
-			numOfTraining--;
-			if (numOfTraining==0) learning=false;
+			if (Tron.numOfTraining<=0) Tron.learning=false;
 		}
 		if ( crash ) {
+			if(Tron.learning) {
+				System.out.println("numOfTraining:"+Tron.numOfTraining);
+				System.out.print(theta);
+			}
+			reward = -100;
 			printCause();
-			arena.state = Arena.RESTARTING;
 			livingAward = 40;
+			arena.state = Arena.RESTARTING;
 		}
 				
     } /* end of step() */
