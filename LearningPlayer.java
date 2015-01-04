@@ -20,7 +20,11 @@ public class LearningPlayer extends Player {
     public Random random;
 	private ArrayList<Double> theta;
 	private float gamma;
-	private alpha;
+	private float alpha;
+	private int numOfTraining;
+	private boolean learning;
+	private int livingAward;
+
 
 
     /**
@@ -38,6 +42,8 @@ public class LearningPlayer extends Player {
 		player_no = number;
 		gamma = 0.1;
 		alpha = 0.1;
+		numOfTraining = 0;
+		livingAward = 20;
 		random = new Random();
 		theta = new ArrayList<Double>();
 
@@ -121,5 +127,43 @@ public class LearningPlayer extends Player {
 	}
 
 	private ArrayList<Double> getFeature(Playerstate currentState, int action){
+		ArrayList<Double> features = new ArrayList<Double>();
+		features.add( ps.manhattan() );
+		if(currentState.player1 == this){				
+		}
+		else{
+		}
+		return features;
 	}
+
+
+	/**
+     * step()
+     *
+     */
+    public void step() {
+		if (( d = whereDoIGo()) != old_d ) { 
+			if ( old_d == (d + 2) % 4 ){
+				d = old_d;
+			}
+			old_d = d;
+		}
+		int reward = livingAward;
+		crash = markBoard( d );
+		if(learning == true){
+			if (crash )
+				reward = -500;
+			Playerstate ps = getCurrentState();
+			update(ps, d, ps.getSuccessor(d), reward);
+			livingAward --;
+		}
+		if ( crash ) {
+			printCause();
+			arena.state = Arena.RESTARTING;
+			livingAward = 40;
+		}
+				
+    } /* end of step() */
+
+
 }

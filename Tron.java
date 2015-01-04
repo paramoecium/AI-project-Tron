@@ -70,7 +70,7 @@ public class Tron extends JFrame {
 	
 	int board_X_max = 10;
 	int board_Y_max = 10;
-	int pixelSize = 7;//Player.linewidth
+	int pixelSize = 20;//Player.linewidth
 	Tron.arena = new Arena( tron, board_X_max, board_Y_max, pixelSize);
 	Tron.arena.setSize( pixelSize*board_X_max, pixelSize*board_Y_max );
 	
@@ -133,8 +133,8 @@ public class Tron extends JFrame {
 	tron.add( tron.pickP1Box );
 	
 	tron.pickP2Box = new JComboBox<String>(new String[]{"LEVEL1","LEVEL2","HUMAN","GP","NN","MINMAX","MIX"});
-	tron.pickP2Box.setSelectedItem("LEVEL2");
-	player2 = LEVEL2;
+	tron.pickP2Box.setSelectedItem("MINMAX");
+	player2 = MINMAX;
 	tron.pickP2Box.addItemListener(new ItemListener() {
         public void itemStateChanged(ItemEvent  e) {
         	if (e.getStateChange() == ItemEvent.SELECTED) {
