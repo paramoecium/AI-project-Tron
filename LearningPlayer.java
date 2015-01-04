@@ -42,7 +42,7 @@ public class LearningPlayer extends Player {
 		player_no = number;
 		gamma = 0.1;
 		alpha = 0.1;
-		numOfTraining = 0;
+		numOfTraining = 10;
 		livingAward = 20;
 		random = new Random();
 		theta = new ArrayList<Double>();
@@ -129,7 +129,8 @@ public class LearningPlayer extends Player {
 	private ArrayList<Double> getFeature(Playerstate ps, int action){
 		ArrayList<Double> features = new ArrayList<Double>();
 		features.add( (double)ps.manhattan() );
-		if(ps.player1 == this){				
+		if(ps.player1 == this){
+			
 		}
 		else{
 		}
@@ -155,7 +156,9 @@ public class LearningPlayer extends Player {
 				reward = -500;
 			Playerstate ps = getCurrentState();
 			update(ps, d, ps.getSuccessor(d), reward);
-			livingAward --;
+			livingAward*=0.9;
+			numOfTraining--;
+			if (numOfTraining==0) learning=false;
 		}
 		if ( crash ) {
 			printCause();
