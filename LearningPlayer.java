@@ -19,8 +19,8 @@ public class LearningPlayer extends Player {
 
     public Random random;
 	private ArrayList<Double> theta;
-	private float gamma;
-	private float alpha;
+	private double gamma;
+	private double alpha;
 	private int numOfTraining;
 	private boolean learning;
 	private int livingAward;
@@ -82,16 +82,16 @@ public class LearningPlayer extends Player {
 		Playerstate currentState = getCurrentState();
 		ArrayList<Integer> legalMoves = currentState.getLegalMoves();
 		int bestAction = 0;
-		int maxQValue = 0;
-		int temp;
+		double maxQValue = 0;
+		double temp;
 		for(int action: legalMoves){
 			temp = evaluateQ(currentState, action);
 			if(temp > maxQValue){
 				maxQValue = temp;
-				bestAvtion = action;
+				bestAction = action;
 			}
 		}
-		return( bestAction );
+		return bestAction ;
     } /* end of whereDoIGo() */
 
 	private void update(Playerstate currentState, int action, Playerstate nextState, int reward){
@@ -105,10 +105,10 @@ public class LearningPlayer extends Player {
 
 	private double getValue(Playerstate ps){
 		ArrayList<Integer> legalMoves = ps.getLegalMoves();
-		int maxQValue = 0;
-		int temp;
+		double maxQValue = 0;
+		double temp;
 		for(int action: legalMoves){
-			temp = evaluateQ(currentState, action);
+			temp = evaluateQ(ps, action);
 			if(temp > maxQValue){
 				maxQValue = temp;
 			}
@@ -126,10 +126,10 @@ public class LearningPlayer extends Player {
 		return sum;
 	}
 
-	private ArrayList<Double> getFeature(Playerstate currentState, int action){
+	private ArrayList<Double> getFeature(Playerstate ps, int action){
 		ArrayList<Double> features = new ArrayList<Double>();
-		features.add( ps.manhattan() );
-		if(currentState.player1 == this){				
+		features.add( (double)ps.manhattan() );
+		if(ps.player1 == this){				
 		}
 		else{
 		}

@@ -146,7 +146,7 @@ public class Playerstate {
                 moves.add(i);
             }
         }
-        
+        /* currentD first*/
         for(int i=0;i<moves.size();i++){
         	if(moves.get(i)==currentPlayer.d){
         		int temp = moves.get(0);
