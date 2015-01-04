@@ -68,33 +68,13 @@ public class FloodPlayer extends MyPlayer {
      *
      */
     public int whereDoIGo() {
-	// move randomly
-	//return( Math.abs( random.nextInt() % 4 ));
-	// "tit for tat" player (copy human)
-	//return( arena.player2.d );
-	//System.out.print(step);
-	//System.out.print(actionStack.size());
-		step --;
-		if(step % 2 == 0){
-			actionStack.removeAllElements();
-			flood();
-			if(actionStack.empty() == true) {
-				return avoidCollision(x1, y1, d); 
-			}
-			step = 2;
-			return (actionStack.pop().intValue());
+    	step --;
+		actionStack.removeAllElements();
+		flood();
+		if(actionStack.empty() == true) {
+			return alongWall(x1, y1, d); 
 		}
-		else{
-			if(actionStack.empty() == false)
-				return (actionStack.pop().intValue());
-			else{
-				flood();
-				if(actionStack.empty() == true) {
-					return avoidCollision(x1, y1, d); 
-				}
-				return (actionStack.pop().intValue());
-			}	
-		}
+		return (actionStack.get(actionStack.size()-1).intValue());
     } /* end of whereDoIGo() */
 
 
@@ -184,24 +164,24 @@ public class FloodPlayer extends MyPlayer {
 	}
 
 	void printFloodBoard()
-	{
-		Playerstate currentState = this.getCurrentState();
-		Point enemyPoint = currentState.getEnemyHead();
-		System.out.println(" ");
-		for(int j = 0; j < y_max; j++){
-			for(int i = 1*x_max/5; i < 1*x_max/3; i++){
-				if(i == enemyPoint.x && j == enemyPoint.y )
-					System.out.print("{},");
-				else if(floodBoard[i][j] == barrier)
-					System.out.print("++,");
-				else if((floodBoard[i][j]/10) >= 1)
-					System.out.print(" "+floodBoard[i][j]+",");
-				else
-					System.out.print(floodBoard[i][j]+",");
-			}
-			System.out.print("\n");
-		}
-	}
+    {
+        Playerstate currentState = this.getCurrentState();
+        Point enemyPoint = currentState.getEnemyHead();
+        System.out.println(" ");
+        for(int j = Math.max(0, y1-10) ; j < Math.min(y_max, y1+10); j++){
+            for(int i = Math.max(0, x1-10); i < Math.min(x_max, x1+10); i++){
+                if(i == enemyPoint.x && j == enemyPoint.y )
+                    System.out.print("{},");
+                else if(floodBoard[i][j] == barrier)
+                    System.out.print("++,");
+                else if((floodBoard[i][j]/10) >= 1)
+                    System.out.print(""+floodBoard[i][j]+",");
+                else
+                    System.out.print(" "+floodBoard[i][j]+",");
+            }
+            System.out.print("\n");
+        }
+    }
 
 	public void printCause() {
 	}

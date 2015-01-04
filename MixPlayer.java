@@ -70,26 +70,12 @@ public class MixPlayer extends MyPlayer {
     	}
     	else{
     		step --;
-    		if(step % 2 == 0){
-    			actionStack.removeAllElements();
-    			flood();
-    			if(actionStack.empty() == true) {
-    				return avoidCollision(x1, y1, d); 
-    			}
-    			step = 2;
-    			return (actionStack.pop().intValue());
-    		}
-    		else{
-    			if(actionStack.empty() == false)
-    				return (actionStack.pop().intValue());
-    			else{
-    				flood();
-    				if(actionStack.empty() == true) {
-    					return avoidCollision(x1, y1, d); 
-    				}
-    				return (actionStack.pop().intValue());
-    			}	
-    		}
+    		actionStack.removeAllElements();
+    		flood();
+    		if(actionStack.empty() == true) {
+				return alongWall(x1, y1, d); 
+			}
+    		return (actionStack.get(actionStack.size()-1).intValue());
     	}
     } /* end of whereDoIGo() */
 
@@ -244,7 +230,6 @@ public class MixPlayer extends MyPlayer {
 			return v;
 		}
 	}
-	
 	public void printCause() {
 	}
 

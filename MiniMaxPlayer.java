@@ -155,89 +155,89 @@ public class MiniMaxPlayer extends MyPlayer {
 		}
 	}
 	
-	public double negaScoutSearch(Playerstate currentState, double alpha, double beta, int currentDepth, ArrayList<Integer> path) 
-	{
-
-		if(currentState.isGoal() || currentDepth == 0) {
-			return (double)(currentState.utility(this));
-		}
-		
-		//System.out.println(currentDepth);
-		//currentState.printBoard();
-		//System.out.println("\n");
-			double b = beta, v = Double.NEGATIVE_INFINITY;//initial window is [-beta,-alpha]
-			
-			ArrayList<Integer> legalMoves = currentState.getLegalMoves();
-			if( legalMoves.size() == 0)
-				legalMoves.add(d);
+//	public double negaScoutSearch(Playerstate currentState, double alpha, double beta, int currentDepth, ArrayList<Integer> path) 
+//	{
+//
+//		if(currentState.isGoal() || currentDepth == 0) {
+//			return (double)(currentState.utility(this));
+//		}
+//		
+//		//System.out.println(currentDepth);
+//		//currentState.printBoard();
+//		//System.out.println("\n");
+//			double b = beta, v = Double.NEGATIVE_INFINITY;//initial window is [-beta,-alpha]
+//			
+//			ArrayList<Integer> legalMoves = currentState.getLegalMoves();
+//			if( legalMoves.size() == 0)
+//				legalMoves.add(d);
+//	
+//			ArrayList<Playerstate> successors = new ArrayList<Playerstate> () ;
+//			ArrayList<Double> scores = new ArrayList<Double>() ;
+//			for(int move: legalMoves){
+//				successors.add(currentState.getSuccessor(move));
+//			}
+//		for(Playerstate successor: successors){
+//			double result = -negaScoutSearch(successor, -b, -alpha, currentDepth-1, path);
+//			if ( (alpha<result)&&(result<beta)&&(successor!=successors.get(0)) )
+//				result = -negaScoutSearch(successor, -beta, -alpha, currentDepth-1, path);//full re-search
+//			scores.add(result);
+//			v = Math.max(v, result);
+//			if (v>= beta) break;
+//			alpha = Math.max(alpha, v);
+//			b = alpha + 1;
+//		}
+//		int idx = scores.indexOf(v);
+//		path.add(legalMoves.get(idx));
+//		return v;
+//
+//	}
 	
-			ArrayList<Playerstate> successors = new ArrayList<Playerstate> () ;
-			ArrayList<Double> scores = new ArrayList<Double>() ;
-			for(int move: legalMoves){
-				successors.add(currentState.getSuccessor(move));
-			}
-		for(Playerstate successor: successors){
-			double result = -negaScoutSearch(successor, -b, -alpha, currentDepth-1, path);
-			if ( (alpha<result)&&(result<beta)&&(successor!=successors.get(0)) )
-				result = -negaScoutSearch(successor, -beta, -alpha, currentDepth-1, path);//full re-search
-			scores.add(result);
-			v = Math.max(v, result);
-			if (v>= beta) break;
-			alpha = Math.max(alpha, v);
-			b = alpha + 1;
-		}
-		int idx = scores.indexOf(v);
-		path.add(legalMoves.get(idx));
-		return v;
-
-	}
-	
-	public double expectedNegaScoutSearch(Playerstate currentState, double alpha, double beta, int currentDepth, ArrayList<Integer> path) 
-	{
-
-		if(currentState.isGoal() || currentDepth == 0) {
-			return (double)(currentState.utility(this));
-		}
-		
-		//System.out.println(currentDepth);
-		//currentState.printBoard();
-		//System.out.println("\n");
-			double b = beta, v = Double.NEGATIVE_INFINITY;//initial window is [-beta,-alpha]
-			
-			ArrayList<Integer> legalMoves = currentState.getLegalMoves();
-			if( legalMoves.size() == 0)
-				legalMoves.add(d);
-	
-			ArrayList<Playerstate> successors = new ArrayList<Playerstate> () ;
-			ArrayList<Double> scores = new ArrayList<Double>() ;
-			for(int move: legalMoves){
-				successors.add(currentState.getSuccessor(move));
-			}
-		if(currentState.currentPlayer == this){
-			for(Playerstate successor: successors){
-				double result = -expectedNegaScoutSearch(successor, -b, -alpha, currentDepth-1, path);
-				if ( (alpha<result)&&(result<beta)&&(successor!=successors.get(0)) )
-					result = -expectedNegaScoutSearch(successor, -beta, -alpha, currentDepth-1, path);//full re-search
-				scores.add(result);
-				v = Math.max(v, result);
-				if (v>= beta) break;
-				alpha = Math.max(alpha, v);
-				b = alpha + 1;
-			}
-			int idx = scores.indexOf(v);
-			path.add(legalMoves.get(idx));
-			return v;
-		}
-		else{
-			for(Playerstate successor: successors){
-				scores.add(-expectedNegaScoutSearch(successor, -beta, -alpha, currentDepth-1, path));//full re-search
-			}
-			double sum = 0;
-			for(Double d : scores)
-				sum += d;
-			return sum/scores.size();
-		}
-	}
+//	public double expectedNegaScoutSearch(Playerstate currentState, double alpha, double beta, int currentDepth, ArrayList<Integer> path) 
+//	{
+//
+//		if(currentState.isGoal() || currentDepth == 0) {
+//			return (double)(currentState.utility(this));
+//		}
+//		
+//		//System.out.println(currentDepth);
+//		//currentState.printBoard();
+//		//System.out.println("\n");
+//			double b = beta, v = Double.NEGATIVE_INFINITY;//initial window is [-beta,-alpha]
+//			
+//			ArrayList<Integer> legalMoves = currentState.getLegalMoves();
+//			if( legalMoves.size() == 0)
+//				legalMoves.add(d);
+//	
+//			ArrayList<Playerstate> successors = new ArrayList<Playerstate> () ;
+//			ArrayList<Double> scores = new ArrayList<Double>() ;
+//			for(int move: legalMoves){
+//				successors.add(currentState.getSuccessor(move));
+//			}
+//		if(currentState.currentPlayer == this){
+//			for(Playerstate successor: successors){
+//				double result = -expectedNegaScoutSearch(successor, -b, -alpha, currentDepth-1, path);
+//				if ( (alpha<result)&&(result<beta)&&(successor!=successors.get(0)) )
+//					result = -expectedNegaScoutSearch(successor, -beta, -alpha, currentDepth-1, path);//full re-search
+//				scores.add(result);
+//				v = Math.max(v, result);
+//				if (v>= beta) break;
+//				alpha = Math.max(alpha, v);
+//				b = alpha + 1;
+//			}
+//			int idx = scores.indexOf(v);
+//			path.add(legalMoves.get(idx));
+//			return v;
+//		}
+//		else{
+//			for(Playerstate successor: successors){
+//				scores.add(-expectedNegaScoutSearch(successor, -beta, -alpha, currentDepth-1, path));//full re-search
+//			}
+//			double sum = 0;
+//			for(Double d : scores)
+//				sum += d;
+//			return sum/scores.size();
+//		}
+//	}
 	
 	public void printCause() {
 	}
